@@ -1,0 +1,103 @@
+syntax = "proto3";
+
+
+package todo;
+
+message TodoLists {
+    repeated TodoList todolists = 1;
+}
+
+message TodoList {
+    int32 id = 1;
+    string label = 2;
+    repeated TodoItem todoItems = 3;
+}
+
+
+message CreateTodoListDto {
+    string label = 1;
+    string user = 2;
+}
+
+message CommandTodoListResponse {
+    string label = 1;
+    string user = 2;
+}
+
+message UpdateTodoListDto {
+    int32 id = 1;
+    string label = 2;
+    string user = 3;
+}
+
+message DeleteTodoListDto{
+    int32 id = 1;
+    string user = 3;
+}
+
+message DeleteResponse {
+    string message = 1;
+}
+
+message TodoItems {
+    repeated TodoItem todoItems = 1;
+}
+
+
+
+message TodoItem {
+    int32 id = 1;
+    string title = 2;
+    string description = 3;
+    int32 priority = 4;
+}
+
+message CreateTodoItemDto {
+    string title = 1;
+    string description = 2;
+    int32 priority = 3;
+    string user = 4;
+    int32 todoList = 5;
+}
+
+
+message UpdateTodoItemDto {
+    int32 id = 1;
+    string title = 2;
+    string description = 3;
+    int32 priority = 4;
+    string user = 5;
+
+}
+
+
+message DeleteTodoItemDto{
+    int32 id = 1;
+    string user = 2;
+}
+
+
+message FindMyTodoListDto {
+    string userId=1;
+}
+
+message FindTodoListTodoItemsDto{
+    string todolist = 1;
+}
+
+message EmptyQurey {}
+
+service TodoService {
+    rpc CreateTodoList(CreateTodoListDto) returns(CommandTodoListResponse){}
+    rpc FindTodoList(FindMyTodoListDto) returns(TodoLists){}
+    rpc UpdateTodoList(UpdateTodoListDto) returns(CommandTodoListResponse){}
+    rpc DeleteTodoList(DeleteTodoListDto) returns(DeleteResponse){}
+
+}
+
+service TodoItemService {
+    rpc CreateTodoItem(CreateTodoItemDto) returns(TodoItem){}
+    rpc UpdateTodoItem(UpdateTodoItemDto) returns(TodoItem){}
+    rpc DeleteTodoItem(DeleteTodoListDto) returns(DeleteResponse){}
+}
+
