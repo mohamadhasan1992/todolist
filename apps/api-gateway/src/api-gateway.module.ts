@@ -6,6 +6,8 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TodolistModule } from './todolist/todolist.module';
 import { TodoItemModule } from './todo-item/todo-item.module';
 import { JwtModule } from '@nestjs/jwt';
+import { APP_FILTER } from '@nestjs/core';
+import { RpcExceptionFilter } from './filters/rpc-exception.filter';
 
 
 
@@ -26,6 +28,12 @@ import { JwtModule } from '@nestjs/jwt';
     AuthModule,
     TodolistModule,
     TodoItemModule,
+  ],
+  providers: [
+    {
+      provide: APP_FILTER,
+      useClass: RpcExceptionFilter,
+    },
   ],
 })
 export class ApiGatewayModule {}

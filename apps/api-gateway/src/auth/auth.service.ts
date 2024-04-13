@@ -1,6 +1,7 @@
-import { AUTH_SERVICE, AUTH_SERVICE_NAME, AuthServiceClient, GetMeDto, LoginUserDto, SignUpUserDto } from '@app/common';
-import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
-import { ClientGrpc } from '@nestjs/microservices';
+import { AUTH_SERVICE, AUTH_SERVICE_NAME, AuthServiceClient, GetMeDto, LoginUserDto, SignUpUserDto, handleError } from '@app/common';
+import { BadRequestException, Inject, Injectable, OnModuleInit } from '@nestjs/common';
+import { ClientGrpc, RpcException } from '@nestjs/microservices';
+import { catchError, throwError } from 'rxjs';
 
 
 
@@ -14,23 +15,21 @@ export class AuthService implements OnModuleInit {
     ){}
 
     onModuleInit() {
-      console.log("init module")
       this.authService = this.client.getService<AuthServiceClient>(AUTH_SERVICE_NAME)
     }
 
 
     sinupUser(signUpUserDto: SignUpUserDto){
-      console.log("auth service signup api-gateway")
-      return this.authService.sinUpUser(signUpUserDto)
+      return handleError(this.authService.sinUpUser(signUpUserDto))
     } 
 
     loginUser(loginUserDto: LoginUserDto){
       console.log("auth service login api-gateway")
-      return this.authService.loginUser(loginUserDto)
+      return handleError(this.authService.loginUser(loginUserDto))
     }
 
 
     getMe(getMeDto: GetMeDto){
-      return this.authService.getMe(getMeDto);
+      return handleError(this.authService.getMe(getMeDto));
     }
 }

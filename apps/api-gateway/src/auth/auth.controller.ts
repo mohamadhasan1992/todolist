@@ -1,9 +1,7 @@
-import { Controller, Get, Post, Body, Req, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { IAuthenticatedUser, LoginUserDto, SignUpUserDto } from '@app/common';
-import { Request } from 'express';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
-import { RpcException } from '@nestjs/microservices';
 import { CurrentUser } from './decorators/current-user.decorator';
 
 
@@ -16,13 +14,11 @@ export class AuthController {
 
   @Post("signup")
   signup(@Body() signUpUserDto: SignUpUserDto) {
-    console.log("signup body api-gateway", signUpUserDto)
     return this.authService.sinupUser(signUpUserDto)
   }
 
   @Post("login")
   login(@Body() loginUserDto: LoginUserDto) {
-    console.log("login body", loginUserDto)
     return this.authService.loginUser(loginUserDto);
   }
 

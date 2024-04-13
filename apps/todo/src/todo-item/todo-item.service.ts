@@ -5,7 +5,6 @@ import { TodoItemEntity } from './db/todo-item.entity';
 import { Repository } from 'typeorm';
 import { TodolistService } from '../todolist/todolist.service';
 import { RpcException } from '@nestjs/microservices';
-import { EventPublisher } from '@nestjs/cqrs';
 
 
 

@@ -1,4 +1,4 @@
-import { CreateTodoItemDto, DeleteTodoItemDto, TODO_ITEM_SERVICE_NAME, TODO_SERVICE, TodoItemServiceClient, UpdateTodoItemDto } from '@app/common';
+import { CreateTodoItemDto, DeleteTodoItemDto, TODO_ITEM_SERVICE_NAME, TODO_SERVICE, TodoItemServiceClient, UpdateTodoItemDto, handleError } from '@app/common';
 import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
 import { ClientGrpc } from '@nestjs/microservices';
 
@@ -18,15 +18,15 @@ export class TodoItemService implements OnModuleInit {
 
 
   create(createTodoItemDto: CreateTodoItemDto) {
-    return this.todoItemService.createTodoItem(createTodoItemDto);
+    return handleError(this.todoItemService.createTodoItem(createTodoItemDto));
   }
 
 
   update(updateTodoItemDto: UpdateTodoItemDto) {
-    return this.todoItemService.updateTodoItem(updateTodoItemDto);
+    return handleError(this.todoItemService.updateTodoItem(updateTodoItemDto));
   }
 
   remove(deleteTodoItemDto: DeleteTodoItemDto) {
-    return this.todoItemService.deleteTodoItem(deleteTodoItemDto);
+    return handleError(this.todoItemService.deleteTodoItem(deleteTodoItemDto));
   }
 }
