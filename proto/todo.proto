@@ -8,7 +8,7 @@ message TodoLists {
 }
 
 message TodoList {
-    int32 id = 1;
+    string id = 1;
     string label = 2;
     repeated TodoItem todoItems = 3;
 }
@@ -25,13 +25,13 @@ message CommandTodoListResponse {
 }
 
 message UpdateTodoListDto {
-    int32 id = 1;
+    string id = 1;
     string label = 2;
     string user = 3;
 }
 
 message DeleteTodoListDto{
-    int32 id = 1;
+    string id = 1;
     string user = 3;
 }
 
@@ -46,7 +46,7 @@ message TodoItems {
 
 
 message TodoItem {
-    int32 id = 1;
+    string id = 1;
     string title = 2;
     string description = 3;
     int32 priority = 4;
@@ -62,7 +62,7 @@ message CreateTodoItemDto {
 
 
 message UpdateTodoItemDto {
-    int32 id = 1;
+    string id = 1;
     string title = 2;
     string description = 3;
     int32 priority = 4;
@@ -72,7 +72,7 @@ message UpdateTodoItemDto {
 
 
 message DeleteTodoItemDto{
-    int32 id = 1;
+    string id = 1;
     string user = 2;
 }
 
@@ -87,15 +87,20 @@ message FindTodoListTodoItemsDto{
 
 message EmptyQurey {}
 
-service TodoService {
-    rpc CreateTodoList(CreateTodoListDto) returns(CommandTodoListResponse){}
+
+service TodoQueryService {
     rpc FindTodoList(FindMyTodoListDto) returns(TodoLists){}
+}
+
+
+service TodoCommandService {
+    rpc CreateTodoList(CreateTodoListDto) returns(CommandTodoListResponse){}
     rpc UpdateTodoList(UpdateTodoListDto) returns(CommandTodoListResponse){}
     rpc DeleteTodoList(DeleteTodoListDto) returns(DeleteResponse){}
 
 }
 
-service TodoItemService {
+service TodoItemCommandService {
     rpc CreateTodoItem(CreateTodoItemDto) returns(TodoItem){}
     rpc UpdateTodoItem(UpdateTodoItemDto) returns(TodoItem){}
     rpc DeleteTodoItem(DeleteTodoListDto) returns(DeleteResponse){}

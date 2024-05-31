@@ -54,14 +54,10 @@
     "todo": {
       "type": "application",
       "root": "apps/todo",
-      "entryFile": "src/main",
-      "sourceRoot": "./",
+      "entryFile": "main",
+      "sourceRoot": "apps/todo/src",
       "compilerOptions": {
-        "tsConfigPath": "apps/todo/tsconfig.app.json",
-        "assets": [
-          "proto/*.proto"
-        ],
-        "watchAssets": true
+        "tsConfigPath": "apps/todo/tsconfig.app.json"
       }
     }
   },
