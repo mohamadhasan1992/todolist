@@ -1,10 +1,15 @@
 import { NestFactory } from '@nestjs/core';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { join } from 'path';
-import { TodoModule } from './todo.module';
 import { TODO_PACKAGE_NAME } from '@app/common/types/todo';
+import { TodoModule } from './todo.module';
+
+
+
+
 
 async function bootstrap() {
+
   const app = await NestFactory.createMicroservice<MicroserviceOptions>(
     TodoModule,
     {
@@ -18,6 +23,6 @@ async function bootstrap() {
     }
   )
 
-  await app.listen()
+  await app.listen();
 }
 bootstrap();

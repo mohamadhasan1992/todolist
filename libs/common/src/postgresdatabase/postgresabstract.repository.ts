@@ -1,10 +1,9 @@
-import { AbstractDocument } from "../mongodatabase";
 import { PostgresAbstractDocument } from "./postgresabstract.entity";
 import { BadRequestException, NotFoundException } from "@nestjs/common";
 
 export abstract class PostgresAbstractRepository<TDocument extends PostgresAbstractDocument>{
     constructor(
-        private readonly abstractDoc: AbstractDocument
+        private readonly abstractDoc: PostgresAbstractDocument
     ){}
 
 

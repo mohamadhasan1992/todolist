@@ -33,7 +33,7 @@ export class TodoItemController {
   ) {
     return this.todoItemService.update({
       ...updateTodoItemDto,
-      id: +id,
+      id,
       user: user._id
     });
   }
@@ -45,7 +45,7 @@ export class TodoItemController {
   
   ) {
     return this.todoItemService.remove({
-      id: +id,
+      id,
       user: user._id
     });
   }

@@ -2,7 +2,7 @@
 import { GrpcMethod, GrpcStreamMethod } from "@nestjs/microservices";
 import { Observable } from "rxjs";
 
-export const protobufPackage = "todo";
+// export const protobufPackage = "todo";
 
 export interface TodoLists {
   todolists: TodoList[];

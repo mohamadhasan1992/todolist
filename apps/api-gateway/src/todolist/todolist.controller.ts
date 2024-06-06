@@ -41,7 +41,7 @@ export class TodolistController {
     @CurrentUser() user: IAuthenticatedUser
   ) {
     return this.todolistService.update({
-      id: +id,
+      id,
       user: user._id,
       ...updateTodolistDto
     });
@@ -53,7 +53,7 @@ export class TodolistController {
     @CurrentUser() user: IAuthenticatedUser
   ) {
     return this.todolistService.remove({
-      id: +id,
+      id,
       user: user._id
     });
   }

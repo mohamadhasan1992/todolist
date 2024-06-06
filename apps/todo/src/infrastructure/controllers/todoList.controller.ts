@@ -1,8 +1,11 @@
 import { Controller, Get, Post, Body } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
-import { CreateTodoListCommand } from '../../application/todoList/command/create-todoList.command';
-import { GetTodoListsQuery } from '../../application/todoList/query/get-todo-query';
-import { TodoList } from '../../domain/todo/todo.entity';
+import { CreateTodoListCommand } from '../../application/commands/create-todoList.command';
+import { TodoList } from '../../domain/entities/todo.entity';
+import { GetTodoListsQuery } from '../../application/queries/get-todoList-query';
+
+
+
 
 
 @Controller('todoList')
@@ -17,11 +20,11 @@ export class TodoListController {
     @Body('label') label: string,
     @Body('user') user: string,
   ): Promise<void> {
-    await this.commandBus.execute(new CreateTodoListCommand(label, user));
+    return await this.commandBus.execute(new CreateTodoListCommand(label, user));
   }
 
   @Get()
   async getTodos(): Promise<TodoList[]> {
-    return this.queryBus.execute(new GetTodoListsQuery());
+    return await this.queryBus.execute(new GetTodoListsQuery());
   }
 }

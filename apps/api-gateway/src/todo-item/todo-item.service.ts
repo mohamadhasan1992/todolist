@@ -1,4 +1,12 @@
-import { CreateTodoItemDto, DeleteTodoItemDto, TODO_ITEM_SERVICE_NAME, TODO_SERVICE, TodoItemServiceClient, UpdateTodoItemDto, handleError } from '@app/common';
+import { 
+  CreateTodoItemDto, 
+  DeleteTodoItemDto, 
+  TODO_ITEM_COMMAND_SERVICE_NAME, 
+  TODO_SERVICE, 
+  TodoItemCommandServiceClient, 
+  UpdateTodoItemDto, 
+  handleError 
+} from '@app/common';
 import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
 import { ClientGrpc } from '@nestjs/microservices';
 
@@ -6,27 +14,27 @@ import { ClientGrpc } from '@nestjs/microservices';
 
 @Injectable()
 export class TodoItemService implements OnModuleInit {
-  private todoItemService: TodoItemServiceClient
+  private todoItemCommandService: TodoItemCommandServiceClient
 
   constructor(
     @Inject(TODO_SERVICE) private client: ClientGrpc 
   ){}
 
   onModuleInit() {
-    this.todoItemService = this.client.getService<TodoItemServiceClient>(TODO_ITEM_SERVICE_NAME)
+    this.todoItemCommandService = this.client.getService<TodoItemCommandServiceClient>(TODO_ITEM_COMMAND_SERVICE_NAME)
   }
 
 
   create(createTodoItemDto: CreateTodoItemDto) {
-    return handleError(this.todoItemService.createTodoItem(createTodoItemDto));
+    return handleError(this.todoItemCommandService.createTodoItem(createTodoItemDto));
   }
 
 
   update(updateTodoItemDto: UpdateTodoItemDto) {
-    return handleError(this.todoItemService.updateTodoItem(updateTodoItemDto));
+    return handleError(this.todoItemCommandService.updateTodoItem(updateTodoItemDto));
   }
 
   remove(deleteTodoItemDto: DeleteTodoItemDto) {
-    return handleError(this.todoItemService.deleteTodoItem(deleteTodoItemDto));
+    return handleError(this.todoItemCommandService.deleteTodoItem(deleteTodoItemDto));
   }
 }

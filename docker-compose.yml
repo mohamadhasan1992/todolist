@@ -50,15 +50,16 @@ services:
       - ./apps/todo/.env
     ports:
       - "50052:50051"
+      - "6006:6006"
     networks:
+      - mongo-net
       - grpc-net
-      - postgres-net
     volumes:
       - .:/usr/src/app
       - ./proto/:/usr/src/proto
       - /usr/src/app/node_modules
     depends_on:
-      - postgres
+      - mongo
 
   mongo:
     container_name: mongo
