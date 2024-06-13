@@ -1,10 +1,10 @@
 // src/infrastructure/database/todo/todo.schema.ts
 import { IdentifiableEntitySchema } from '@app/common/database/identifiable-entity.schema';
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Prop, Schema } from '@nestjs/mongoose';
 
 
-@Schema()
-export class TodoItemDocument extends IdentifiableEntitySchema {
+@Schema({versionKey: false, collection: "TodoItem"})
+export class TodoItemSchema extends IdentifiableEntitySchema {
   @Prop({ required: true, unique: true })
   title: string;
 
@@ -15,4 +15,4 @@ export class TodoItemDocument extends IdentifiableEntitySchema {
   priority: string;
 }
 
-export const TodoItemSchema = SchemaFactory.createForClass(TodoItemDocument);
+

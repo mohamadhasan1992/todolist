@@ -1,8 +1,29 @@
-export class TodoItem {
+import { AggregateRoot } from "@nestjs/cqrs";
+
+export class TodoItem extends AggregateRoot{
     constructor(
-      public readonly _id: string,
-      public readonly title: string,
-      public readonly description: string,
-      public readonly priority: string,
-    ) {}
+      private readonly _id: string,
+      private readonly title: string,
+      private readonly description: string,
+      private readonly priority: string,
+    ) {
+      super()
+    }
+
+    getId(): string{
+      return this._id;
+    }
+
+
+    getTitle(): string{
+      return this.title;
+    }
+
+    getDescription(): string{
+      return this.description;
+    }
+
+    getPriority(): string{
+      return this.priority;
+    }
 }

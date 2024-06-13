@@ -7,22 +7,20 @@ import { TodoModule } from './todo.module';
 
 
 
-
 async function bootstrap() {
-
   const app = await NestFactory.createMicroservice<MicroserviceOptions>(
     TodoModule,
     {
       transport: Transport.GRPC,
       options:{
         url: "todo:50052",
-        protoPath: join(__dirname, "../todo.proto"),
+        protoPath: join(__dirname, "../../../proto/todo.proto"),
         package: TODO_PACKAGE_NAME
       } 
 
     }
   )
-
   await app.listen();
 }
 bootstrap();
+

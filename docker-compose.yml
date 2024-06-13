@@ -16,7 +16,7 @@ services:
       - redis_net
     volumes:
       - .:/usr/src/app
-      - ./proto/:/usr/src/proto
+      - ./proto/:/usr/src/app/proto
       - /usr/src/app/node_modules
   authentication:
     container_name: authentication
@@ -37,7 +37,7 @@ services:
       - redis_net
     volumes:
       - .:/usr/src/app
-      - ./proto/:/usr/src/proto
+      - ./proto/:/usr/src/app/proto
       - /usr/src/app/node_modules
   todo:
     container_name: todo
@@ -56,7 +56,7 @@ services:
       - grpc-net
     volumes:
       - .:/usr/src/app
-      - ./proto/:/usr/src/proto
+      - ./proto/:/usr/src/app/proto
       - /usr/src/app/node_modules
     depends_on:
       - mongo
@@ -64,8 +64,6 @@ services:
   mongo:
     container_name: mongo
     image: mongo:5.0
-    ports:
-      - "127.0.0.1:27717:27017"
     networks:
       - mongo-net
     volumes:

@@ -1,17 +1,15 @@
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 import { GetTodoItemsQuery } from './get-todoItem-query';
-import { ITodoItemRepository } from '../../domain/repositories/todoItem.repository.interface';
-import { TodoItem } from '../../domain/entities/todoItem.entity';
-import { Inject } from '@nestjs/common';
+import { TodoItemEntityRepository } from '../../infrastructure/repositories/todoItem-entity.repository';
 
 
 
 
 @QueryHandler(GetTodoItemsQuery)
 export class GetTodoItemsHandler implements IQueryHandler<GetTodoItemsQuery> {
-  constructor(@Inject('ITodoListRepository') private readonly todoItemRepository: ITodoItemRepository) {}
+  constructor(private readonly todoItemRepository: TodoItemEntityRepository) {}
 
-  async execute(query: GetTodoItemsQuery): Promise<TodoItem[]> {
+  async execute(query: GetTodoItemsQuery) {
     return this.todoItemRepository.findAll();
   }
 }

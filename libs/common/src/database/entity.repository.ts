@@ -33,7 +33,7 @@ export abstract class EntityRepository<
       throw new NotFoundException('Entity was not found.');
     }
 
-    return this.entitySchemaFactory.createFromSchema(entityDocument);
+    return this.entitySchemaFactory.createFromSchema(entityDocument as unknown as TSchema);
   }
 
   protected async find(
@@ -42,7 +42,7 @@ export abstract class EntityRepository<
     return (
       await this.entityModel.find(entityFilterQuery, {}, { lean: true })
     ).map(entityDocument =>
-      this.entitySchemaFactory.createFromSchema(entityDocument),
+      this.entitySchemaFactory.createFromSchema(entityDocument as unknown as TSchema),
     );
   }
 
@@ -68,6 +68,23 @@ export abstract class EntityRepository<
 
     if (!updatedEntityDocument) {
       throw new NotFoundException('Unable to find the entity to replace.');
+    }
+  }
+
+
+  protected async delete(
+    entityFilterQuery: FilterQuery<TSchema>,
+    entity: TEntity,
+  ): Promise<void> {
+    const deletedEntityDocument = await this.entityModel.findOneAndDelete(
+      entityFilterQuery,
+      (this.entitySchemaFactory.create(
+        entity,
+      ) as unknown) as TSchema,
+    );
+
+    if (!deletedEntityDocument) {
+      throw new NotFoundException('Unable to find the entity to delete.');
     }
   }
 }

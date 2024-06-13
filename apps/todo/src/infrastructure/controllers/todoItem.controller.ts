@@ -1,8 +1,9 @@
 import { Controller, Get, Post, Body } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
-import { CreateTodoItemCommand } from '../../application/commands/create-todoItem.command';
 import { TodoItem } from '../../domain/entities/todoItem.entity';
 import { GetTodoItemsQuery } from '../../application/queries/get-todoItem-query';
+import { CreateTodoItemDto } from '../../application/dto/todoItem/CreateTodoItem.dto';
+import { CreateTodoItemCommand } from '../../application/commands/todoItem/create-todoItem.command';
 
 
 
@@ -16,11 +17,9 @@ export class TodoItemController {
 
   @Post()
   async createTodo(
-    @Body('title') title: string,
-    @Body('description') description: string,
-    @Body('priority') priority: string,
+    @Body() createTodoItemDto :CreateTodoItemDto,
   ): Promise<void> {
-    await this.commandBus.execute(new CreateTodoItemCommand(title, description, priority));
+    await this.commandBus.execute(new CreateTodoItemCommand(createTodoItemDto ));
   }
 
   @Get()

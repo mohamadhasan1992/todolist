@@ -1,18 +1,22 @@
 import { Module } from '@nestjs/common';
-import { MongooseModule } from '@nestjs/mongoose';
 import { CqrsModule } from '@nestjs/cqrs';
 import { DatabaseModule } from '@app/common/database/database.module';
 import { ConfigModule } from '@nestjs/config';
-import { TodoListDocument, TodoListSchema } from './infrastructure/database/schemas/todoList.schema';
-import { TodoItemDocument, TodoItemSchema } from './infrastructure/database/schemas/todoItem.schema';
+import { TodoListSchema } from './infrastructure/database/schemas/todoList.schema';
+import { TodoItemSchema } from './infrastructure/database/schemas/todoItem.schema';
 import { TodoListController } from './infrastructure/controllers/todoList.controller';
 import { TodoItemController } from './infrastructure/controllers/todoItem.controller';
-import { MongooseTodoListRepository } from './infrastructure/repositories/todoList.repository';
-import { MongooseTodoItemRepository } from './infrastructure/repositories/todoItem.repository';
-import { CreateTodoListHandler } from './application/commands/create-todoList-command.handler';
-import { CreateTodoItemHandler } from './application/commands/create-todoItem-command.handler';
 import { GetTodoListsHandler } from './application/queries/get-todoList-query.handler';
 import { GetTodoItemsHandler } from './application/queries/get-todoItem-query.handler';
+import { TodoListEntityRepository } from './infrastructure/repositories/todoList-entity.repository';
+import { TodoItemEntityRepository } from './infrastructure/repositories/todoItem-entity.repository';
+import { TodoListSchemaFactory } from './infrastructure/database/schema-factory/todoList-schema.factory';
+import { TodoItemSchemaFactory } from './infrastructure/database/schema-factory/todoItem-schema.factory';
+import { SchemaFactory } from '@nestjs/mongoose';
+import { TodoItemEntityFactory } from './domain/entityFactory/TodoItemEntity.factory';
+import { TodoListEntityFactory } from './domain/entityFactory/TodoListEntity.factory';
+import { TodoCommandHandlers } from './application/commands';
+import { TodoEventHandlers } from './domain/events';
 
 
 
@@ -25,15 +29,15 @@ import { GetTodoItemsHandler } from './application/queries/get-todoItem-query.ha
     }),
     CqrsModule,
     DatabaseModule,
-    MongooseModule.forFeature([
+    DatabaseModule.forFeature([
         { 
-            name: TodoListDocument.name, 
-            schema: TodoListSchema 
+            name: TodoListSchema.name, 
+            schema: SchemaFactory.createForClass(TodoListSchema) 
         },
         { 
-            name: TodoItemDocument.name, 
-            schema: TodoItemSchema 
-        },
+            name: TodoItemSchema.name, 
+            schema: SchemaFactory.createForClass(TodoItemSchema) 
+        }
     ]),
   ],
   controllers: [
@@ -41,20 +45,16 @@ import { GetTodoItemsHandler } from './application/queries/get-todoItem-query.ha
     TodoItemController
 ],
   providers: [
-    MongooseTodoListRepository,
-    MongooseTodoItemRepository,
-    CreateTodoListHandler,
-    CreateTodoItemHandler,
+    TodoListEntityRepository,
+    TodoItemEntityRepository,
+    TodoListEntityFactory,
+    TodoItemEntityFactory,
+    TodoListSchemaFactory,
+    TodoItemSchemaFactory,
+    ...TodoCommandHandlers,
+    ...TodoEventHandlers,
     GetTodoListsHandler,
     GetTodoItemsHandler,
-    {
-      provide: 'ITodoListRepository',
-      useClass: MongooseTodoListRepository,
-    },
-    {
-      provide: 'ITodoItemRepository',
-      useClass: MongooseTodoItemRepository,
-    },
   ],
 })
 export class TodoModule {}

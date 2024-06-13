@@ -22,4 +22,8 @@ export abstract class BaseEntityRepository<
   async findAll(): Promise<TEntity[]> {
     return this.find({});
   }
+
+  async delete(entityFilterQuery: FilterQuery<TSchema>): Promise<void> {
+    return this.delete(entityFilterQuery)
+  }
 }
