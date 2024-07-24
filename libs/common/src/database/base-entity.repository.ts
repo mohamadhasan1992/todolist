@@ -12,6 +12,10 @@ export abstract class BaseEntityRepository<
     return this.findOne({ _id: new Types.ObjectId(id) } as FilterQuery<TSchema>);
   }
 
+  async findOne(filterQuery: FilterQuery<TSchema>){
+    return await this.findOne(filterQuery)
+  }
+
   async findOneAndReplaceById(id: string, entity: TEntity): Promise<void> {
     await this.findOneAndReplace(
       { _id: new Types.ObjectId(id) } as FilterQuery<TSchema>,
