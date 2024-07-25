@@ -13,7 +13,7 @@ export abstract class BaseEntityRepository<
   }
 
   async findOne(filterQuery: FilterQuery<TSchema>): Promise<TEntity>{
-    return await super.findOne(filterQuery)
+    return super.findOne(filterQuery);
   }
 
   async findOneAndReplaceById(id: string, entity: TEntity): Promise<void> {
@@ -23,11 +23,12 @@ export abstract class BaseEntityRepository<
     );
   }
 
-  async findAll(): Promise<TEntity[]> {
-    return this.find({});
+  async findAll(filterQuery: FilterQuery<TSchema>): Promise<TEntity[]> {
+    return this.find(filterQuery);
   }
 
   async delete(entityFilterQuery: FilterQuery<TSchema>): Promise<void> {
-    return this.delete(entityFilterQuery)
+    await this.entityModel.findOneAndDelete(entityFilterQuery).exec();
+
   }
 }

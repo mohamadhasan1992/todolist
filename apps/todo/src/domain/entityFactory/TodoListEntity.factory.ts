@@ -4,6 +4,7 @@ import { Types } from "mongoose";
 import { TodoListEntityRepository } from "../../infrastructure/repositories/todoList-entity.repository";
 import { Injectable } from "@nestjs/common";
 import { TodoListCreatedEvent } from "../events/todoList/todoList-created.event";
+import { RpcException } from "@nestjs/microservices";
 
 
 
@@ -19,7 +20,11 @@ export class TodoListEntityFactory implements EntityFactory<TodoList>{
             label,
             user
         )
-        await this.todoListRepository.create(todoList)
+        try{
+            await this.todoListRepository.create(todoList)
+        }catch(err){
+            throw new RpcException(err.message)
+        }
         todoList.apply(
             new TodoListCreatedEvent(todoList.getId())
         );

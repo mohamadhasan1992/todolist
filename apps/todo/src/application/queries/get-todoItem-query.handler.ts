@@ -10,6 +10,6 @@ export class GetTodoItemsHandler implements IQueryHandler<GetTodoItemsQuery> {
   constructor(private readonly todoItemRepository: TodoItemEntityRepository) {}
 
   async execute(query: GetTodoItemsQuery) {
-    return this.todoItemRepository.findAll();
+    return this.todoItemRepository.findAll(query);
   }
 }

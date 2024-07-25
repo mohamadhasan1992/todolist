@@ -1,1 +1,6 @@
-export class GetTodoListsQuery {}
+
+export class GetTodoListsQuery {
+    constructor(
+        public readonly userId: string
+      ) {}
+}

@@ -18,4 +18,5 @@ export class TodoListEntityRepository extends BaseEntityRepository<TodoListSchem
         super(todoListModel, todoListSchemaFactory);
     }
 
+
 }

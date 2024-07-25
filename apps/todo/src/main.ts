@@ -1,8 +1,8 @@
 import { NestFactory } from '@nestjs/core';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { join } from 'path';
-import { TODO_PACKAGE_NAME } from '@app/common/types/todo';
 import { TodoModule } from './todo.module';
+import { TODO_PACKAGE_NAME } from '@app/common';
 
 
 

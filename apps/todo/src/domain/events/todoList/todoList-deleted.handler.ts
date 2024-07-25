@@ -9,7 +9,7 @@ import { TodoListDeletedEvent } from "./todoList-deleted.event";
 export class TodoListDeletedHandler implements IEventHandler<TodoListDeletedEvent>{
     
     
-    async handle({ todoListId }: TodoListDeletedEvent): Promise<void> {
-        console.log("todoList deleted event", todoListId)
+    async handle({ id }: TodoListDeletedEvent): Promise<void> {
+        console.log("todoList deleted event", id)
     }
 }

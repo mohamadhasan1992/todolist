@@ -2,7 +2,6 @@
 import { GrpcMethod, GrpcStreamMethod } from "@nestjs/microservices";
 import { Observable } from "rxjs";
 
-// export const protobufPackage = "todo";
 
 export interface TodoLists {
   todolists: TodoList[];
@@ -11,6 +10,7 @@ export interface TodoLists {
 export interface TodoList {
   id: string;
   label: string;
+  user: string;
   todoItems: TodoItem[];
 }
 
@@ -20,8 +20,10 @@ export interface CreateTodoListDto {
 }
 
 export interface CommandTodoListResponse {
+  id: string;
   label: string;
   user: string;
+  todoItems?: TodoItem[];
 }
 
 export interface UpdateTodoListDto {
@@ -84,32 +86,9 @@ export interface EmptyQurey {
 
 export const TODO_PACKAGE_NAME = "todo";
 
-export interface TodoQueryServiceClient {
+export interface TodoServiceClient {
   findTodoList(request: FindMyTodoListDto): Observable<TodoLists>;
-}
 
-export interface TodoQueryServiceController {
-  findTodoList(request: FindMyTodoListDto): Promise<TodoLists> | Observable<TodoLists> | TodoLists;
-}
-
-export function TodoQueryServiceControllerMethods() {
-  return function (constructor: Function) {
-    const grpcMethods: string[] = ["findTodoList"];
-    for (const method of grpcMethods) {
-      const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
-      GrpcMethod("TodoQueryService", method)(constructor.prototype[method], method, descriptor);
-    }
-    const grpcStreamMethods: string[] = [];
-    for (const method of grpcStreamMethods) {
-      const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
-      GrpcStreamMethod("TodoQueryService", method)(constructor.prototype[method], method, descriptor);
-    }
-  };
-}
-
-export const TODO_QUERY_SERVICE_NAME = "TodoQueryService";
-
-export interface TodoCommandServiceClient {
   createTodoList(request: CreateTodoListDto): Observable<CommandTodoListResponse>;
 
   updateTodoList(request: UpdateTodoListDto): Observable<CommandTodoListResponse>;
@@ -117,7 +96,9 @@ export interface TodoCommandServiceClient {
   deleteTodoList(request: DeleteTodoListDto): Observable<DeleteResponse>;
 }
 
-export interface TodoCommandServiceController {
+export interface TodoServiceController {
+  findTodoList(request: FindMyTodoListDto): Promise<TodoLists> | Observable<TodoLists> | TodoLists;
+
   createTodoList(
     request: CreateTodoListDto,
   ): Promise<CommandTodoListResponse> | Observable<CommandTodoListResponse> | CommandTodoListResponse;
@@ -129,24 +110,24 @@ export interface TodoCommandServiceController {
   deleteTodoList(request: DeleteTodoListDto): Promise<DeleteResponse> | Observable<DeleteResponse> | DeleteResponse;
 }
 
-export function TodoCommandServiceControllerMethods() {
+export function TodoServiceControllerMethods() {
   return function (constructor: Function) {
-    const grpcMethods: string[] = ["createTodoList", "updateTodoList", "deleteTodoList"];
+    const grpcMethods: string[] = ["findTodoList", "createTodoList", "updateTodoList", "deleteTodoList"];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
-      GrpcMethod("TodoCommandService", method)(constructor.prototype[method], method, descriptor);
+      GrpcMethod("TodoService", method)(constructor.prototype[method], method, descriptor);
     }
     const grpcStreamMethods: string[] = [];
     for (const method of grpcStreamMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
-      GrpcStreamMethod("TodoCommandService", method)(constructor.prototype[method], method, descriptor);
+      GrpcStreamMethod("TodoService", method)(constructor.prototype[method], method, descriptor);
     }
   };
 }
 
-export const TODO_COMMAND_SERVICE_NAME = "TodoCommandService";
+export const TODO_SERVICE_NAME = "TodoService";
 
-export interface TodoItemCommandServiceClient {
+export interface TodoItemServiceClient {
   createTodoItem(request: CreateTodoItemDto): Observable<TodoItem>;
 
   updateTodoItem(request: UpdateTodoItemDto): Observable<TodoItem>;
@@ -154,7 +135,7 @@ export interface TodoItemCommandServiceClient {
   deleteTodoItem(request: DeleteTodoListDto): Observable<DeleteResponse>;
 }
 
-export interface TodoItemCommandServiceController {
+export interface TodoItemServiceController {
   createTodoItem(request: CreateTodoItemDto): Promise<TodoItem> | Observable<TodoItem> | TodoItem;
 
   updateTodoItem(request: UpdateTodoItemDto): Promise<TodoItem> | Observable<TodoItem> | TodoItem;
@@ -162,19 +143,19 @@ export interface TodoItemCommandServiceController {
   deleteTodoItem(request: DeleteTodoListDto): Promise<DeleteResponse> | Observable<DeleteResponse> | DeleteResponse;
 }
 
-export function TodoItemCommandServiceControllerMethods() {
+export function TodoItemServiceControllerMethods() {
   return function (constructor: Function) {
     const grpcMethods: string[] = ["createTodoItem", "updateTodoItem", "deleteTodoItem"];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
-      GrpcMethod("TodoItemCommandService", method)(constructor.prototype[method], method, descriptor);
+      GrpcMethod("TodoItemService", method)(constructor.prototype[method], method, descriptor);
     }
     const grpcStreamMethods: string[] = [];
     for (const method of grpcStreamMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
-      GrpcStreamMethod("TodoItemCommandService", method)(constructor.prototype[method], method, descriptor);
+      GrpcStreamMethod("TodoItemService", method)(constructor.prototype[method], method, descriptor);
     }
   };
 }
 
-export const TODO_ITEM_COMMAND_SERVICE_NAME = "TodoItemCommandService";
+export const TODO_ITEM_SERVICE_NAME = "TodoItemService";

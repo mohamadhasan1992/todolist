@@ -2,11 +2,9 @@ import {
   CreateTodoListDto, 
   DeleteTodoItemDto, 
   FindMyTodoListDto, 
-  TODO_COMMAND_SERVICE_NAME, 
-  TODO_QUERY_SERVICE_NAME, 
   TODO_SERVICE, 
-  TodoCommandServiceClient, 
-  TodoQueryServiceClient, 
+  TODO_SERVICE_NAME, 
+  TodoServiceClient, 
   // TODO_SERVICE_NAME, 
   // TodoServiceClient, 
   UpdateTodoListDto, 
@@ -19,34 +17,32 @@ import { ClientGrpc } from '@nestjs/microservices';
 
 @Injectable()
 export class TodolistService implements OnModuleInit {
-  private todoQueryService: TodoQueryServiceClient;
-  private todoCommandService: TodoCommandServiceClient
+  private todoService: TodoServiceClient;
 
   constructor(
     @Inject(TODO_SERVICE) private client: ClientGrpc 
   ){}
 
   onModuleInit() {
-    this.todoQueryService = this.client.getService<TodoQueryServiceClient>(TODO_QUERY_SERVICE_NAME);
-    this.todoCommandService = this.client.getService<TodoCommandServiceClient>(TODO_COMMAND_SERVICE_NAME);
+    this.todoService = this.client.getService<TodoServiceClient>(TODO_SERVICE_NAME);
   }
 
 
   create(createTodolistDto: CreateTodoListDto) {
-    return handleError(this.todoCommandService.createTodoList(createTodolistDto));
+    return handleError(this.todoService.createTodoList(createTodolistDto));
   }
 
   findAll(
     findMyTodoListDto: FindMyTodoListDto
   ) {
-    return handleError(this.todoQueryService.findTodoList(findMyTodoListDto));
+    return handleError(this.todoService.findTodoList(findMyTodoListDto));
   }
 
   update(updateTodolistDto: UpdateTodoListDto) {
-    return handleError(this.todoCommandService.updateTodoList(updateTodolistDto));
+    return handleError(this.todoService.updateTodoList(updateTodolistDto));
   }
 
   remove(deleteTodoListDto: DeleteTodoItemDto) {
-    return handleError(this.todoCommandService.deleteTodoList(deleteTodoListDto))
+    return handleError(this.todoService.deleteTodoList(deleteTodoListDto))
   }
 }

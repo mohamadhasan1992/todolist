@@ -1,6 +1,7 @@
 import { CommandHandler, EventPublisher, ICommandHandler } from '@nestjs/cqrs';
 import { UpdateTodoListCommand } from './update-todoList.command';
 import { TodoListEntityRepository } from 'apps/todo/src/infrastructure/repositories/todoList-entity.repository';
+import { CommandTodoListResponse} from '@app/common';
 
 
 
@@ -12,15 +13,19 @@ export class UpdateTodoListHandler implements ICommandHandler<UpdateTodoListComm
     private readonly eventPublisher: EventPublisher
   ) {}
 
-  async execute({ updateTodoListDto }: UpdateTodoListCommand): Promise<void> {
+  async execute({ updateTodoListDto }: UpdateTodoListCommand): Promise<CommandTodoListResponse> {
     const {id, label, user} = updateTodoListDto;
 
     const todoList = this.eventPublisher.mergeObjectContext(
       await this.todoListRepository.findOneById(id)
     );
     todoList.updateTodoList(label, user);
-    this.todoListRepository.findOneAndReplaceById(id, todoList)
+    await this.todoListRepository.findOneAndReplaceById(id, todoList)
     todoList.commit()
-
+    return {
+      id: todoList.getId(),
+      label: todoList.getLabel(),
+      user: todoList.getUser()
+    }
   }
 }

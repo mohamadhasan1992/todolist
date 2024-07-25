@@ -10,7 +10,7 @@ import { TodoListEntityRepository } from '../../infrastructure/repositories/todo
 export class GetTodoListsHandler implements IQueryHandler<GetTodoListsQuery> {
   constructor(private readonly todoRepository: TodoListEntityRepository) {}
 
-  async execute(query: GetTodoListsQuery) {
-    return this.todoRepository.findAll();
+  async execute({userId}: GetTodoListsQuery) {
+    return this.todoRepository.findAll({user: userId});
   }
 }

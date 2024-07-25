@@ -17,6 +17,7 @@ import { TodoItemEntityFactory } from './domain/entityFactory/TodoItemEntity.fac
 import { TodoListEntityFactory } from './domain/entityFactory/TodoListEntity.factory';
 import { TodoCommandHandlers } from './application/commands';
 import { TodoEventHandlers } from './domain/events';
+import { TodoQueryHandlers } from './application/queries';
 
 
 
@@ -53,6 +54,7 @@ import { TodoEventHandlers } from './domain/events';
     TodoItemSchemaFactory,
     ...TodoCommandHandlers,
     ...TodoEventHandlers,
+    ...TodoQueryHandlers,
     GetTodoListsHandler,
     GetTodoItemsHandler,
   ],

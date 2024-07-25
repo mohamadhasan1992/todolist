@@ -1,5 +1,6 @@
 import { AggregateRoot } from "@nestjs/cqrs";
 
+
 export class TodoList extends AggregateRoot{
     constructor(
       private readonly _id: string,

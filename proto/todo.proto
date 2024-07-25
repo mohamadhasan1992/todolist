@@ -10,7 +10,8 @@ message TodoLists {
 message TodoList {
     string id = 1;
     string label = 2;
-    repeated TodoItem todoItems = 3;
+    string user = 3;
+    repeated TodoItem todoItems = 4;
 }
 
 
@@ -20,8 +21,10 @@ message CreateTodoListDto {
 }
 
 message CommandTodoListResponse {
-    string label = 1;
-    string user = 2;
+    string id = 1;
+    string label = 2;
+    string user = 3;
+    repeated TodoItem todoItems = 4;
 }
 
 message UpdateTodoListDto {
@@ -88,19 +91,15 @@ message FindTodoListTodoItemsDto{
 message EmptyQurey {}
 
 
-service TodoQueryService {
+service TodoService {
     rpc FindTodoList(FindMyTodoListDto) returns(TodoLists){}
-}
-
-
-service TodoCommandService {
     rpc CreateTodoList(CreateTodoListDto) returns(CommandTodoListResponse){}
     rpc UpdateTodoList(UpdateTodoListDto) returns(CommandTodoListResponse){}
     rpc DeleteTodoList(DeleteTodoListDto) returns(DeleteResponse){}
 
 }
 
-service TodoItemCommandService {
+service TodoItemService {
     rpc CreateTodoItem(CreateTodoItemDto) returns(TodoItem){}
     rpc UpdateTodoItem(UpdateTodoItemDto) returns(TodoItem){}
     rpc DeleteTodoItem(DeleteTodoListDto) returns(DeleteResponse){}
