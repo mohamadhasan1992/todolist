@@ -24,4 +24,5 @@ export class UserSchemaFactory implements EntitySchemaFactory<UserSchema, User>{
             user.password
         )
     }
+    
 }

@@ -27,14 +27,13 @@ export class UserJwtStrategy extends PassportStrategy(Strategy, 'jwt'){
 
 
     async validate({userId}: UserTokenPayload){
-
         if(!userId){
             throw new UnauthorizedException("unAuthenticated! please login first!")
         }
         // check for cached
         const cachedUser: string = await this.cacheManager.get(userId);
         if(cachedUser){
-            return JSON.parse(cachedUser);
+            return cachedUser
         }
         // if user not found check for direct request user
         const user = this.authService.getMe({userId})

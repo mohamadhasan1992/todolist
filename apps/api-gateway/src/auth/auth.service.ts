@@ -1,7 +1,6 @@
 import { AUTH_SERVICE, AUTH_SERVICE_NAME, AuthServiceClient, GetMeDto, LoginUserDto, SignUpUserDto, handleError } from '@app/common';
 import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
-import { ClientGrpc, RpcException } from '@nestjs/microservices';
-import { catchError, throwError } from 'rxjs';
+import { ClientGrpc } from '@nestjs/microservices';
 
 
 
@@ -24,7 +23,6 @@ export class AuthService implements OnModuleInit {
     } 
 
     loginUser(loginUserDto: LoginUserDto){
-      console.log("auth service login api-gateway")
       return handleError(this.authService.loginUser(loginUserDto))
     }
 

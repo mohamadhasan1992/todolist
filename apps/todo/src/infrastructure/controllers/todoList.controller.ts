@@ -25,6 +25,7 @@ export class TodoListController implements TodoCommandServiceController {
   async createTodoList(
     @Payload() createTodoListDto: CreateTodoListDto,
   ): Promise<CommandTodoListResponse> {
+    console.log("createTodoListDto", createTodoListDto)
     return await this.commandBus.execute(new CreateTodoListCommand(createTodoListDto));
   }
 

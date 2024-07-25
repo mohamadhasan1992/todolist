@@ -6,11 +6,10 @@ import { UserEntityRepository } from '../../infrustructure/repositories/user-ent
 
 
 @QueryHandler(GetMeQuery)
-export class getMeHandler implements IQueryHandler<GetMeQuery> {
+export class getMeQueryHandler implements IQueryHandler<GetMeQuery> {
   constructor(private readonly userRepository: UserEntityRepository) {}
 
   async execute({userId}: GetMeQuery) {
-
     return this.userRepository.findOne({_id: userId});
   }
 }

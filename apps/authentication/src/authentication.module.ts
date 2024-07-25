@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { RedisOptions } from '@app/common/config/redisOptions';
 import { CacheModule } from '@nestjs/cache-manager';
 import { CqrsModule } from '@nestjs/cqrs';
@@ -11,6 +11,9 @@ import { UserEntityRepository } from './infrustructure/repositories/user-entity.
 import { UserEntityFactory } from './domain/entityFactory/UserEntity.factory';
 import { AuthCommandHandlers } from './application/commands';
 import { UserSchemaFactory } from './infrustructure/database/schema-factory/user-schema.factory';
+import { AuthService } from './application/services/auth.service';
+import { JwtModule } from '@nestjs/jwt';
+import { AuthQueryHandlers } from './application/queries';
 
 
 
@@ -19,6 +22,14 @@ import { UserSchemaFactory } from './infrustructure/database/schema-factory/user
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
+    }),
+    JwtModule.registerAsync({
+      useFactory: async(configService: ConfigService) => ({
+        import: [ConfigModule],
+        secret: configService.getOrThrow<string>("JWT_SECRET"),
+        signOptions: { expiresIn:  configService.getOrThrow<string>("JWT_EXPIRES_IN")}
+      }),
+      inject: [ConfigService]
     }),
     CqrsModule,
     DatabaseModule,
@@ -32,10 +43,12 @@ import { UserSchemaFactory } from './infrustructure/database/schema-factory/user
   ],
   controllers: [AuthController],
   providers: [
+    AuthService,
     UserEntityRepository,
     UserEntityFactory,
     UserSchemaFactory,
     ...AuthCommandHandlers,
+    ...AuthQueryHandlers
 
   ]
 })

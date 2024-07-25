@@ -1,6 +1,7 @@
-import { CommandHandler, EventPublisher, ICommandHandler } from '@nestjs/cqrs';
+import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { SignUpCommand } from './signup.command';
-import { UserEntityFactory } from 'apps/authentication/src/domain/entityFactory/UserEntity.factory';
+import { AuthService } from '../../services/auth.service';
+import { SignUpUserResponse } from '@app/common/types/auth';
 
 
 
@@ -8,23 +9,17 @@ import { UserEntityFactory } from 'apps/authentication/src/domain/entityFactory/
 @CommandHandler(SignUpCommand)
 export class signupUserHandler implements ICommandHandler<SignUpCommand> {
   constructor(
-    private readonly userFactory: UserEntityFactory,
-    private readonly eventPublisher: EventPublisher
+    private readonly authService: AuthService
   ) {}
 
-  async execute({signUpUserDto}: SignUpCommand): Promise<void> {
+  async execute({signUpUserDto}: SignUpCommand): Promise<SignUpUserResponse> {
     const {
       name,
       email,
       password
     } = signUpUserDto;
 
-    
-    const signedUpUser = this.eventPublisher.mergeObjectContext(
-      await this.userFactory.create(name, email, password)
-    );
-    signedUpUser.commit()
-  
 
+    return await this.authService.signup(name, email, password)
   }
 }

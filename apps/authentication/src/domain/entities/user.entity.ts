@@ -26,5 +26,9 @@ export class User extends AggregateRoot{
       return this.password;
     }
 
+    validatePassword(password: string): boolean{
+      return this.password === password
+    }
+
 
 }

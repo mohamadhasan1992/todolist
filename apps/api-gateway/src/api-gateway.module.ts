@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module } from '@nestjs/common';
 import { AuthModule } from './auth/auth.module';
 import { RedisOptions } from '@app/common/config/redisOptions';
 import { CacheModule } from '@nestjs/cache-manager';
@@ -8,6 +8,7 @@ import { TodoItemModule } from './todo-item/todo-item.module';
 import { JwtModule } from '@nestjs/jwt';
 import { APP_FILTER } from '@nestjs/core';
 import { RpcExceptionFilter } from './filters/rpc-exception.filter';
+import { LoggerMiddleware } from './middlewares/logger.middleware';
 
 
 
@@ -24,7 +25,8 @@ import { RpcExceptionFilter } from './filters/rpc-exception.filter';
         signOptions: { expiresIn:  configService.getOrThrow<string>("JWT_EXPIRES_IN")}
       }),
       inject: [ConfigService]
-    }),    CacheModule.registerAsync(RedisOptions),
+    }),
+    CacheModule.registerAsync(RedisOptions),
     AuthModule,
     TodolistModule,
     TodoItemModule,
@@ -36,4 +38,10 @@ import { RpcExceptionFilter } from './filters/rpc-exception.filter';
     },
   ],
 })
-export class ApiGatewayModule {}
+export class ApiGatewayModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer
+      .apply(LoggerMiddleware)
+      .forRoutes('*');
+  }
+}

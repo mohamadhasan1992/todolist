@@ -1,7 +1,7 @@
-import { CommandHandler, EventPublisher, ICommandHandler } from '@nestjs/cqrs';
-import { UserEntityFactory } from 'apps/authentication/src/domain/entityFactory/UserEntity.factory';
+import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { LoginCommand } from './login.command';
-import { UserEntityRepository } from 'apps/authentication/src/infrustructure/repositories/user-entity.repository';
+import { AuthService } from '../../services/auth.service';
+import { LoginUserResponse } from '@app/common/types/auth';
 
 
 
@@ -9,24 +9,17 @@ import { UserEntityRepository } from 'apps/authentication/src/infrustructure/rep
 @CommandHandler(LoginCommand)
 export class loginUserHandler implements ICommandHandler<LoginCommand> {
   constructor(
-    private readonly userFactory: UserEntityFactory,
-    private readonly userRepository: UserEntityRepository,
-    private readonly eventPublisher: EventPublisher
+    private readonly authService: AuthService,
   ) {}
 
-  async execute({loginUserDto}: LoginCommand): Promise<void> {
+  async execute({loginUserDto}: LoginCommand): Promise<LoginUserResponse> {
     const {
       email,
       password
     } = loginUserDto;
 
     
-    const foundUser = await this.userRepository.findOne({email});
-    // check for password
-    // return user
-    return foundUser;
-
-  
+    return await this.authService.login(email, password)
 
   }
 }
