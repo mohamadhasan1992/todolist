@@ -1,5 +1,7 @@
 export class CreateTodoItemDto{
-    name: string;
+    title: string;
     description: string;
     priority: string;
+    todoList: string;
 }
+

@@ -13,7 +13,8 @@ export class TodoItemSchemaFactory implements EntitySchemaFactory<TodoItemSchema
             _id: new Types.ObjectId(todoItem.getId()),
             title: todoItem.getDescription(),
             description: todoItem.getDescription(),
-            priority: todoItem.getPriority()
+            priority: todoItem.getPriority(),
+            todoList: todoItem.getTodoList()
         }
     }
     createFromSchema(todoItem: TodoItemSchema): TodoItem {
@@ -21,7 +22,8 @@ export class TodoItemSchemaFactory implements EntitySchemaFactory<TodoItemSchema
             todoItem._id.toHexString(),
             todoItem.title,
             todoItem.description,
-            todoItem.priority
+            todoItem.priority,
+            todoItem.todoList
         )
     }
 }

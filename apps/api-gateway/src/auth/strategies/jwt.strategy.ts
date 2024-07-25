@@ -6,6 +6,7 @@ import { Request } from "express";
 import { IAuthenticatedUser, UserTokenPayload } from "@app/common";
 import { CACHE_MANAGER, Cache } from "@nestjs/cache-manager";
 import { AuthService } from "../auth.service";
+import { catchError, lastValueFrom, map, Observable } from "rxjs";
 
 
 
@@ -35,12 +36,22 @@ export class UserJwtStrategy extends PassportStrategy(Strategy, 'jwt'){
         if(cachedUser){
             return cachedUser
         }
-        // if user not found check for direct request user
-        const user = this.authService.getMe({userId})
-        if(user){
-            return user
-        }else{
-            throw new UnauthorizedException("unAuthenticated! please login first!")
+        // If user not found, fetch user from authService
+        try {
+            const user: IAuthenticatedUser = await lastValueFrom(
+                this.authService.getMe({ userId }).pipe(
+                    map((user: IAuthenticatedUser) => {
+                        return user;
+                    }),
+                    catchError(error => {
+                        throw new UnauthorizedException(error.message);
+                    })
+                )
+            );
+
+            return user;
+        } catch (error) {
+            throw new UnauthorizedException(error.message);
         }
     }
     private extractTokenFromHeader(request: Request): string | undefined {

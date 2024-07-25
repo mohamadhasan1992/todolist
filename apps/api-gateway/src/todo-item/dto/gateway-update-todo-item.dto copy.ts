@@ -1,5 +1,4 @@
-import { Priority } from "@app/common";
-import { IsEnum, IsNotEmpty, IsString } from "class-validator";
+import { IsNotEmpty, IsString } from "class-validator";
 
 
 
@@ -14,7 +13,7 @@ export class GatewayUpdateTodoItemDto {
     @IsNotEmpty()
     description: string;
 
-    @IsEnum(Priority)
+    @IsString()
     @IsNotEmpty()
-    priority: Priority;
+    priority: string;
 }

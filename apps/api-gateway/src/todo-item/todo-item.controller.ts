@@ -13,6 +13,12 @@ import { GatewayUpdateTodoItemDto } from './dto/gateway-update-todo-item.dto cop
 export class TodoItemController {
   constructor(private readonly todoItemService: TodoItemService) {}
 
+  @Get(":id")
+  getItemsByListId(
+    @Param("id") todoListId: string,
+  ){
+    return this.todoItemService.find(todoListId)
+  }
 
   @Post()
   create(

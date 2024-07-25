@@ -2,10 +2,11 @@ import { AggregateRoot } from "@nestjs/cqrs";
 
 export class TodoItem extends AggregateRoot{
     constructor(
-      private readonly _id: string,
-      private readonly title: string,
-      private readonly description: string,
-      private readonly priority: string,
+      private _id: string,
+      private title: string,
+      private description: string,
+      private priority: string,
+      private todoList: string
     ) {
       super()
     }
@@ -26,4 +27,19 @@ export class TodoItem extends AggregateRoot{
     getPriority(): string{
       return this.priority;
     }
+
+    getTodoList(): string{
+      return this.todoList
+    }
+
+    updateDetails(
+      title: string, 
+      description: string, 
+      priority: string): void{
+        this.title = title;
+        this.description = description;
+        this.priority = priority;
+    }
+
+    
 }

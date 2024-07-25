@@ -19,7 +19,7 @@ export class TodoListSchemaFactory implements EntitySchemaFactory<TodoListSchema
         return new TodoList(
             todoSchema._id.toHexString(),
             todoSchema.label,
-            todoSchema.user
+            todoSchema.user,
         )
     }
 }

@@ -13,12 +13,13 @@ export class TodoItemEntityFactory implements EntityFactory<TodoItem>{
         private readonly todoItemRepository: TodoItemEntityRepository
     ){}
 
-    async create(name: string, description: string, priority: string): Promise<TodoItem> {
+    async create(title: string, description: string, priority: string, todoList: string): Promise<TodoItem> {
         const todoItem = new TodoItem(
             new Types.ObjectId().toHexString(), 
-            name, 
+            title, 
             description,
-            priority
+            priority,
+            todoList
         )
         await this.todoItemRepository.create(todoItem)
         todoItem.apply(

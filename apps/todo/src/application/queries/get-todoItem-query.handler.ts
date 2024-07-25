@@ -9,7 +9,8 @@ import { TodoItemEntityRepository } from '../../infrastructure/repositories/todo
 export class GetTodoItemsHandler implements IQueryHandler<GetTodoItemsQuery> {
   constructor(private readonly todoItemRepository: TodoItemEntityRepository) {}
 
-  async execute(query: GetTodoItemsQuery) {
-    return this.todoItemRepository.findAll(query);
+  async execute({findTodoItemsByTodoListDto}: GetTodoItemsQuery) {
+    const {todoListId} = findTodoItemsByTodoListDto;
+    return this.todoItemRepository.findAll({todoList: todoListId});
   }
 }

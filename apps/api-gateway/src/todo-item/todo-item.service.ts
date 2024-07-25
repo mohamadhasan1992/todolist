@@ -24,6 +24,9 @@ export class TodoItemService implements OnModuleInit {
     this.todoItemService = this.client.getService<TodoItemServiceClient>(TODO_ITEM_SERVICE_NAME)
   }
 
+  find(todoListId: string){
+    return handleError(this.todoItemService.findTodoItemsByList({todoListId}))
+  }
 
   create(createTodoItemDto: CreateTodoItemDto) {
     return handleError(this.todoItemService.createTodoItem(createTodoItemDto));

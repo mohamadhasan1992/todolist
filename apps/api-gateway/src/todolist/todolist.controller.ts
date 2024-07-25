@@ -18,6 +18,7 @@ export class TodolistController {
     @CurrentUser() user: IAuthenticatedUser,
     @Body() {label}: GatewayCreateTodoListDto
   ) {
+    console.log("user", user)
     return this.todolistService.create({
       user: user._id,
       label

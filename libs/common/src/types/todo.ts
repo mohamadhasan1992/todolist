@@ -3,8 +3,13 @@ import { GrpcMethod, GrpcStreamMethod } from "@nestjs/microservices";
 import { Observable } from "rxjs";
 
 
+
 export interface TodoLists {
   todolists: TodoList[];
+}
+
+export interface TodoItems {
+  todoItems: TodoItem[];
 }
 
 export interface TodoList {
@@ -23,7 +28,6 @@ export interface CommandTodoListResponse {
   id: string;
   label: string;
   user: string;
-  todoItems?: TodoItem[];
 }
 
 export interface UpdateTodoListDto {
@@ -41,30 +45,32 @@ export interface DeleteResponse {
   message: string;
 }
 
-export interface TodoItems {
-  todoItems: TodoItem[];
-}
-
 export interface TodoItem {
   id: string;
   title: string;
   description: string;
-  priority: number;
+  priority: string;
 }
 
 export interface CreateTodoItemDto {
   title: string;
   description: string;
-  priority: number;
+  priority: string;
   user: string;
-  todoList: number;
+  todoList: string;
+}
+
+export interface CommandTodoItemResponse {
+  title: string;
+  description: string;
+  priority: string;
 }
 
 export interface UpdateTodoItemDto {
   id: string;
   title: string;
   description: string;
-  priority: number;
+  priority: string;
   user: string;
 }
 
@@ -75,6 +81,10 @@ export interface DeleteTodoItemDto {
 
 export interface FindMyTodoListDto {
   userId: string;
+}
+
+export interface FindTodoItemsByTodoListDto {
+  todoListId: string;
 }
 
 export interface FindTodoListTodoItemsDto {
@@ -128,24 +138,32 @@ export function TodoServiceControllerMethods() {
 export const TODO_SERVICE_NAME = "TodoService";
 
 export interface TodoItemServiceClient {
-  createTodoItem(request: CreateTodoItemDto): Observable<TodoItem>;
+  findTodoItemsByList(request: FindTodoItemsByTodoListDto): Observable<TodoItems>;
 
-  updateTodoItem(request: UpdateTodoItemDto): Observable<TodoItem>;
+  createTodoItem(request: CreateTodoItemDto): Observable<CommandTodoItemResponse>;
+
+  updateTodoItem(request: UpdateTodoItemDto): Observable<CommandTodoItemResponse>;
 
   deleteTodoItem(request: DeleteTodoListDto): Observable<DeleteResponse>;
 }
 
 export interface TodoItemServiceController {
-  createTodoItem(request: CreateTodoItemDto): Promise<TodoItem> | Observable<TodoItem> | TodoItem;
+  findTodoItemsByList(request: FindTodoItemsByTodoListDto): Promise<TodoItems> | Observable<TodoItems> | TodoItems;
 
-  updateTodoItem(request: UpdateTodoItemDto): Promise<TodoItem> | Observable<TodoItem> | TodoItem;
+  createTodoItem(
+    request: CreateTodoItemDto,
+  ): Promise<CommandTodoItemResponse> | Observable<CommandTodoItemResponse> | CommandTodoItemResponse;
+
+  updateTodoItem(
+    request: UpdateTodoItemDto,
+  ): Promise<CommandTodoItemResponse> | Observable<CommandTodoItemResponse> | CommandTodoItemResponse;
 
   deleteTodoItem(request: DeleteTodoListDto): Promise<DeleteResponse> | Observable<DeleteResponse> | DeleteResponse;
 }
 
 export function TodoItemServiceControllerMethods() {
   return function (constructor: Function) {
-    const grpcMethods: string[] = ["createTodoItem", "updateTodoItem", "deleteTodoItem"];
+    const grpcMethods: string[] = ["findTodoItemsByList", "createTodoItem", "updateTodoItem", "deleteTodoItem"];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
       GrpcMethod("TodoItemService", method)(constructor.prototype[method], method, descriptor);

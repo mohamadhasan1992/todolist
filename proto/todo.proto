@@ -7,6 +7,10 @@ message TodoLists {
     repeated TodoList todolists = 1;
 }
 
+message TodoItems {
+    repeated TodoItem todoItems = 1;
+}
+
 message TodoList {
     string id = 1;
     string label = 2;
@@ -24,7 +28,6 @@ message CommandTodoListResponse {
     string id = 1;
     string label = 2;
     string user = 3;
-    repeated TodoItem todoItems = 4;
 }
 
 message UpdateTodoListDto {
@@ -42,9 +45,7 @@ message DeleteResponse {
     string message = 1;
 }
 
-message TodoItems {
-    repeated TodoItem todoItems = 1;
-}
+
 
 
 
@@ -52,23 +53,30 @@ message TodoItem {
     string id = 1;
     string title = 2;
     string description = 3;
-    int32 priority = 4;
+    string priority = 4;
 }
 
 message CreateTodoItemDto {
     string title = 1;
     string description = 2;
-    int32 priority = 3;
+    string priority = 3;
     string user = 4;
-    int32 todoList = 5;
+    string todoList = 5;
 }
+
+message CommandTodoItemResponse {
+    string title = 1;
+    string description = 2;
+    string priority = 3;
+}
+
 
 
 message UpdateTodoItemDto {
     string id = 1;
     string title = 2;
     string description = 3;
-    int32 priority = 4;
+    string priority = 4;
     string user = 5;
 
 }
@@ -82,6 +90,10 @@ message DeleteTodoItemDto{
 
 message FindMyTodoListDto {
     string userId=1;
+}
+
+message FindTodoItemsByTodoListDto {
+    string todoListId=1;
 }
 
 message FindTodoListTodoItemsDto{
@@ -100,8 +112,9 @@ service TodoService {
 }
 
 service TodoItemService {
-    rpc CreateTodoItem(CreateTodoItemDto) returns(TodoItem){}
-    rpc UpdateTodoItem(UpdateTodoItemDto) returns(TodoItem){}
+    rpc FindTodoItemsByList(FindTodoItemsByTodoListDto) returns(TodoItems){}
+    rpc CreateTodoItem(CreateTodoItemDto) returns(CommandTodoItemResponse){}
+    rpc UpdateTodoItem(UpdateTodoItemDto) returns(CommandTodoItemResponse){}
     rpc DeleteTodoItem(DeleteTodoListDto) returns(DeleteResponse){}
 }
 

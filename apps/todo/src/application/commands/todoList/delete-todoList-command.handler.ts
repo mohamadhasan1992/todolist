@@ -24,7 +24,6 @@ export class DeleteTodoListHandler implements ICommandHandler<DeleteTodoListComm
 
     const todoListContext = this.eventPublisher.mergeObjectContext(todoList);
     await this.todoListRepository.delete({ _id: new Types.ObjectId(id) });
-
     todoListContext.apply(new TodoListDeletedEvent(id));
     todoListContext.commit();
 
