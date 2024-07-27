@@ -1,12 +1,12 @@
-import { Injectable, ForbiddenException, UnauthorizedException, Inject } from "@nestjs/common";
+import { Injectable, UnauthorizedException, Inject } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { PassportStrategy } from "@nestjs/passport"
 import { ExtractJwt, Strategy } from "passport-jwt";
 import { Request } from "express";
 import { IAuthenticatedUser, UserTokenPayload } from "@app/common";
 import { CACHE_MANAGER, Cache } from "@nestjs/cache-manager";
-import { AuthService } from "../auth.service";
-import { catchError, lastValueFrom, map, Observable } from "rxjs";
+import { catchError, lastValueFrom, map } from "rxjs";
+import { AuthService } from "apps/api-gateway/src/application/services/auth.service";
 
 
 

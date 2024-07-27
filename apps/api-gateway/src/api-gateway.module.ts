@@ -1,14 +1,21 @@
 import { MiddlewareConsumer, Module } from '@nestjs/common';
-import { AuthModule } from './auth/auth.module';
 import { RedisOptions } from '@app/common/config/redisOptions';
 import { CacheModule } from '@nestjs/cache-manager';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { TodolistModule } from './todolist/todolist.module';
-import { TodoItemModule } from './todo-item/todo-item.module';
 import { JwtModule } from '@nestjs/jwt';
 import { APP_FILTER } from '@nestjs/core';
-import { RpcExceptionFilter } from './filters/rpc-exception.filter';
-import { LoggerMiddleware } from './middlewares/logger.middleware';
+import { LoggerMiddleware } from './infrustructure/middlewares/logger.middleware';
+import { ClientsModule, Transport } from '@nestjs/microservices';
+import { AUTH_PACKAGE_NAME, AUTH_SERVICE, TODO_PACKAGE_NAME, TODO_SERVICE } from '@app/common';
+import { join } from 'path';
+import { TodoItemController } from './presentation/controllers/todo-item.controller';
+import { TodoItemService } from './application/services/todo-item.service';
+import { TodolistController } from './presentation/controllers/todolist.controller';
+import { TodolistService } from './application/services/todolist.service';
+import { AuthController } from './presentation/controllers/auth.controller';
+import { AuthService } from './application/services/auth.service';
+import { UserJwtStrategy } from './infrustructure/auth/strategies/jwt.strategy';
+import { RpcExceptionFilter } from './domain/exceptions/rpc-exception.filter';
 
 
 
@@ -18,6 +25,28 @@ import { LoggerMiddleware } from './middlewares/logger.middleware';
     ConfigModule.forRoot({
       isGlobal: true,
     }),
+    ClientsModule.register([
+      {
+        name: TODO_SERVICE,
+        transport: Transport.GRPC,
+        options: {
+          url:"Todo:50052",
+          package: TODO_PACKAGE_NAME,
+          protoPath: join(__dirname, '../todo.proto'),
+        },
+      } 
+    ]),
+    ClientsModule.register([
+      {
+        name: AUTH_SERVICE,
+        transport: Transport.GRPC,
+        options: {
+          url:"authentication:50051",
+          package: AUTH_PACKAGE_NAME,
+          protoPath: join(__dirname, '../auth.proto'),
+        },
+      } 
+    ]),
     JwtModule.registerAsync({
       useFactory: async(configService: ConfigService) => ({
         import: [ConfigModule],
@@ -27,11 +56,17 @@ import { LoggerMiddleware } from './middlewares/logger.middleware';
       inject: [ConfigService]
     }),
     CacheModule.registerAsync(RedisOptions),
-    AuthModule,
-    TodolistModule,
-    TodoItemModule,
+  ],
+  controllers: [
+    AuthController,
+    TodolistController,
+    TodoItemController,
   ],
   providers: [
+    TodolistService,
+    TodoItemService,
+    AuthService, 
+    UserJwtStrategy,
     {
       provide: APP_FILTER,
       useClass: RpcExceptionFilter,

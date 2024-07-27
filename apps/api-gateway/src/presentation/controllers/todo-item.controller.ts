@@ -1,10 +1,10 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
-import { TodoItemService } from './todo-item.service';
 import { IAuthenticatedUser } from '@app/common';
-import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
-import { CurrentUser } from '../auth/decorators/current-user.decorator';
-import { GatewayCreateTodoItemDto } from './dto/gateway-create-todoItem.dto';
-import { GatewayUpdateTodoItemDto } from './dto/gateway-update-todoItem.dto';
+import { JwtAuthGuard } from '../../infrustructure/auth/guards/jwt-auth.guard';
+import { TodoItemService } from '../../application/services/todo-item.service';
+import { GatewayCreateTodoItemDto } from '../dto/gateway-create-todoItem.dto';
+import { CurrentUser } from '../../infrustructure/auth/decorators/current-user.decorator';
+import { GatewayUpdateTodoItemDto } from '../dto/gateway-update-todoItem.dto';
 
 
 

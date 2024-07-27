@@ -6,7 +6,7 @@ import { CqrsModule } from '@nestjs/cqrs';
 import { DatabaseModule } from '@app/common/database/database.module';
 import { UserSchema } from './infrustructure/database/schema/user.schema';
 import { SchemaFactory } from '@nestjs/mongoose';
-import { AuthController } from './infrustructure/controller/auth.controller';
+import { AuthController } from './presentation/controllers/auth.controller';
 import { UserEntityRepository } from './infrustructure/repositories/user-entity.repository';
 import { UserEntityFactory } from './domain/entityFactory/UserEntity.factory';
 import { AuthCommandHandlers } from './application/commands';

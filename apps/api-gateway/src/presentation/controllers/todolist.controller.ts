@@ -1,10 +1,10 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
-import { TodolistService } from './todolist.service';
 import {  IAuthenticatedUser } from '@app/common';
-import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
-import { CurrentUser } from '../auth/decorators/current-user.decorator';
-import { GatewayCreateTodoListDto } from './dto/gateway-create-todolist.dto';
-import { GatewayUpdateTodoListDto } from './dto/gateway-update-todolist.dto';
+import { JwtAuthGuard } from '../../infrustructure/auth/guards/jwt-auth.guard';
+import { TodolistService } from '../../application/services/todolist.service';
+import { CurrentUser } from '../../infrustructure/auth/decorators/current-user.decorator';
+import { GatewayCreateTodoListDto } from '../dto/gateway-create-todolist.dto';
+import { GatewayUpdateTodoListDto } from '../dto/gateway-update-todolist.dto';
 
 
 
