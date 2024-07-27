@@ -4,6 +4,7 @@ import { TodoListEntityRepository } from 'apps/todo/src/infrastructure/repositor
 import { RpcException } from '@nestjs/microservices';
 import { TodoListDeletedEvent } from 'apps/todo/src/domain/events/todoList/todoList-deleted.event';
 import { Types } from 'mongoose';
+import { CommandTodoListResponse } from '@app/common';
 
 
 
@@ -15,7 +16,7 @@ export class DeleteTodoListHandler implements ICommandHandler<DeleteTodoListComm
     private readonly eventPublisher: EventPublisher
   ) {}
 
-  async execute({ deleteTodoListDto }: DeleteTodoListCommand): Promise<{message: string}> {
+  async execute({ deleteTodoListDto }: DeleteTodoListCommand): Promise<CommandTodoListResponse> {
     const { id } = deleteTodoListDto;
     const todoList = await this.todoListRepository.findOneById(id);
     if (!todoList) {
@@ -27,6 +28,11 @@ export class DeleteTodoListHandler implements ICommandHandler<DeleteTodoListComm
     todoListContext.apply(new TodoListDeletedEvent(id));
     todoListContext.commit();
 
-    return { message: 'todoList deleted successfully' };
+    return { 
+      id: todoList.getId(),
+      label: todoList.getLabel(),
+      user: todoList.getUser(),
+      message: 'todoList deleted successfully' 
+    };
   }
 }

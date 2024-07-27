@@ -3,15 +3,6 @@ import { GrpcMethod, GrpcStreamMethod } from "@nestjs/microservices";
 import { Observable } from "rxjs";
 
 
-
-export interface TodoLists {
-  todolists: TodoList[];
-}
-
-export interface TodoItems {
-  todoItems: TodoItem[];
-}
-
 export interface TodoList {
   id: string;
   label: string;
@@ -20,12 +11,6 @@ export interface TodoList {
 }
 
 export interface CreateTodoListDto {
-  label: string;
-  user: string;
-}
-
-export interface CommandTodoListResponse {
-  id: string;
   label: string;
   user: string;
 }
@@ -41,7 +26,10 @@ export interface DeleteTodoListDto {
   user: string;
 }
 
-export interface DeleteResponse {
+export interface CommandTodoListResponse {
+  id: string;
+  label: string;
+  user: string;
   message: string;
 }
 
@@ -60,23 +48,26 @@ export interface CreateTodoItemDto {
   todoList: string;
 }
 
-export interface CommandTodoItemResponse {
-  title: string;
-  description: string;
-  priority: string;
-}
-
 export interface UpdateTodoItemDto {
   id: string;
   title: string;
   description: string;
   priority: string;
   user: string;
+  todoList: string;
 }
 
 export interface DeleteTodoItemDto {
   id: string;
   user: string;
+}
+
+export interface CommandTodoItemResponse {
+  id: string;
+  title: string;
+  description: string;
+  priority: string;
+  message: string;
 }
 
 export interface FindMyTodoListDto {
@@ -87,11 +78,12 @@ export interface FindTodoItemsByTodoListDto {
   todoListId: string;
 }
 
-export interface FindTodoListTodoItemsDto {
-  todolist: string;
+export interface TodoLists {
+  todoLists: TodoList[];
 }
 
-export interface EmptyQurey {
+export interface TodoItems {
+  todoItems: TodoItem[];
 }
 
 export const TODO_PACKAGE_NAME = "todo";
@@ -103,7 +95,7 @@ export interface TodoServiceClient {
 
   updateTodoList(request: UpdateTodoListDto): Observable<CommandTodoListResponse>;
 
-  deleteTodoList(request: DeleteTodoListDto): Observable<DeleteResponse>;
+  deleteTodoList(request: DeleteTodoListDto): Observable<CommandTodoListResponse>;
 }
 
 export interface TodoServiceController {
@@ -117,7 +109,9 @@ export interface TodoServiceController {
     request: UpdateTodoListDto,
   ): Promise<CommandTodoListResponse> | Observable<CommandTodoListResponse> | CommandTodoListResponse;
 
-  deleteTodoList(request: DeleteTodoListDto): Promise<DeleteResponse> | Observable<DeleteResponse> | DeleteResponse;
+  deleteTodoList(
+    request: DeleteTodoListDto,
+  ): Promise<CommandTodoListResponse> | Observable<CommandTodoListResponse> | CommandTodoListResponse;
 }
 
 export function TodoServiceControllerMethods() {
@@ -144,7 +138,7 @@ export interface TodoItemServiceClient {
 
   updateTodoItem(request: UpdateTodoItemDto): Observable<CommandTodoItemResponse>;
 
-  deleteTodoItem(request: DeleteTodoListDto): Observable<DeleteResponse>;
+  deleteTodoItem(request: DeleteTodoItemDto): Observable<CommandTodoItemResponse>;
 }
 
 export interface TodoItemServiceController {
@@ -158,7 +152,9 @@ export interface TodoItemServiceController {
     request: UpdateTodoItemDto,
   ): Promise<CommandTodoItemResponse> | Observable<CommandTodoItemResponse> | CommandTodoItemResponse;
 
-  deleteTodoItem(request: DeleteTodoListDto): Promise<DeleteResponse> | Observable<DeleteResponse> | DeleteResponse;
+  deleteTodoItem(
+    request: DeleteTodoItemDto,
+  ): Promise<CommandTodoItemResponse> | Observable<CommandTodoItemResponse> | CommandTodoItemResponse;
 }
 
 export function TodoItemServiceControllerMethods() {

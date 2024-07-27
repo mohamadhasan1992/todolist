@@ -2,6 +2,7 @@ import { CommandHandler, EventPublisher, ICommandHandler } from "@nestjs/cqrs";
 import { TodoItemEntityRepository } from "apps/todo/src/infrastructure/repositories/todoItem-entity.repository";
 import { TodoItem } from "apps/todo/src/domain/entities/todoItem.entity";
 import { DeleteTodoItemCommand } from "./delete-todoItem.command";
+import { CommandTodoItemResponse } from "@app/common";
 
 
 
@@ -13,7 +14,7 @@ export class DeleteTodoItemHandler implements ICommandHandler<DeleteTodoItemComm
     private readonly eventPublisher: EventPublisher
   ) {}
 
-  async execute({ deleteTodoItemDto }: DeleteTodoItemCommand): Promise<TodoItem> {
+  async execute({ deleteTodoItemDto }: DeleteTodoItemCommand): Promise<CommandTodoItemResponse> {
     const { id } = deleteTodoItemDto;
 
     // Fetch the existing todo item
@@ -26,7 +27,13 @@ export class DeleteTodoItemHandler implements ICommandHandler<DeleteTodoItemComm
     // Commit the changes to trigger events
     todoItem.commit();
 
-    return todoItem;
+    return {
+      id: todoItem.getId(),
+      title: todoItem.getTitle(),
+      description: todoItem.getDescription(),
+      message: "Todo item deleted successfully",
+      priority: todoItem.getPriority()
+    }
   }
 }
 

@@ -1,8 +1,8 @@
-import { Controller, Get, Post, Body } from '@nestjs/common';
+import { Controller } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { CreateTodoListDto } from '../../application/dto/todoList/CreateTodoList.dto';
 import { CreateTodoListCommand } from '../../application/commands/todoList/create-todoList.command';
-import { CommandTodoListResponse, DeleteResponse, DeleteTodoListDto, FindMyTodoListDto, TodoLists, TodoServiceController, TodoServiceControllerMethods, UpdateTodoListDto } from '@app/common';
+import { CommandTodoListResponse, DeleteTodoListDto, FindMyTodoListDto, TodoLists, TodoServiceController, TodoServiceControllerMethods, UpdateTodoListDto } from '@app/common';
 import { Payload } from '@nestjs/microservices';
 import { UpdateTodoListCommand } from '../../application/commands/todoList/update-todoList.command';
 import { DeleteTodoListCommand } from '../../application/commands/todoList/delete-todoList.command';
@@ -29,7 +29,7 @@ export class TodoListController implements TodoServiceController {
       new GetTodoListsQuery(userId)
     )
     return {
-      todolists: todolists.map((todoList: TodoList) => ({
+      todoLists: todolists.map((todoList: TodoList) => ({
         ...todoList,
         id: todoList.getId()
       })) 
@@ -39,23 +39,34 @@ export class TodoListController implements TodoServiceController {
   async createTodoList(
     @Payload() createTodoListDto: CreateTodoListDto,
   ): Promise<CommandTodoListResponse> {
-    return await this.commandBus.execute(new CreateTodoListCommand(createTodoListDto));
+    const newTodoList = await this.commandBus.execute(new CreateTodoListCommand(createTodoListDto));
+    return {
+      ...newTodoList,
+      message: "TodoList updated successfully!"
+    }
   }
 
 
   async updateTodoList(
     @Payload() updateTodoListDto: UpdateTodoListDto,
   ): Promise<CommandTodoListResponse> {
-    console.log("updateTodoListDto", updateTodoListDto)
-    return await this.commandBus.execute(new UpdateTodoListCommand(updateTodoListDto));
+    const updatedTodoList = await this.commandBus.execute(new UpdateTodoListCommand(updateTodoListDto));
+    return {
+      ...updatedTodoList,
+      message: "TodoList updated successfully!"
+    }
   }
 
 
   async deleteTodoList(
     @Payload() deleteTodoListDto: DeleteTodoListDto,
-  ): Promise<DeleteResponse> {
+  ): Promise<CommandTodoListResponse> {
 
-    return await this.commandBus.execute(new DeleteTodoListCommand(deleteTodoListDto));
+    const todoList = await this.commandBus.execute(new DeleteTodoListCommand(deleteTodoListDto));
+    return {
+      message: "todoList deleted successfully!",
+      ...todoList
+    }
   }
 
 }

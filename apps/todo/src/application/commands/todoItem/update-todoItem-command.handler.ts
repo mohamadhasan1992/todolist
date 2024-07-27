@@ -1,7 +1,7 @@
 import { CommandHandler, EventPublisher, ICommandHandler } from "@nestjs/cqrs";
 import { UpdateTodoItemCommand } from "./update-todoItem.command";
 import { TodoItemEntityRepository } from "apps/todo/src/infrastructure/repositories/todoItem-entity.repository";
-import { TodoItem } from "apps/todo/src/domain/entities/todoItem.entity";
+import { CommandTodoItemResponse } from "@app/common";
 
 
 
@@ -13,7 +13,7 @@ export class UpdateTodoItemHandler implements ICommandHandler<UpdateTodoItemComm
     private readonly eventPublisher: EventPublisher
   ) {}
 
-  async execute({ updateTodoItemDto }: UpdateTodoItemCommand): Promise<TodoItem> {
+  async execute({ updateTodoItemDto }: UpdateTodoItemCommand): Promise<CommandTodoItemResponse> {
     const { id, title, description, priority } = updateTodoItemDto;
 
     // Fetch the existing todo item
@@ -30,7 +30,13 @@ export class UpdateTodoItemHandler implements ICommandHandler<UpdateTodoItemComm
     // Commit the changes to trigger events
     todoItem.commit();
 
-    return todoItem;
+    return {
+      message: "TodoItem updated successfully",
+      id: todoItem.getId(),
+      title: todoItem.getTitle(),
+      description: todoItem.getDescription(),
+      priority: todoItem.getPriority(),
+    };
 
   }
 }

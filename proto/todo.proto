@@ -3,13 +3,6 @@ syntax = "proto3";
 
 package todo;
 
-message TodoLists {
-    repeated TodoList todolists = 1;
-}
-
-message TodoItems {
-    repeated TodoItem todoItems = 1;
-}
 
 message TodoList {
     string id = 1;
@@ -24,12 +17,6 @@ message CreateTodoListDto {
     string user = 2;
 }
 
-message CommandTodoListResponse {
-    string id = 1;
-    string label = 2;
-    string user = 3;
-}
-
 message UpdateTodoListDto {
     string id = 1;
     string label = 2;
@@ -41,12 +28,12 @@ message DeleteTodoListDto{
     string user = 3;
 }
 
-message DeleteResponse {
-    string message = 1;
+message CommandTodoListResponse {
+    string id = 1;
+    string label = 2;
+    string user = 3;
+    string message = 4;
 }
-
-
-
 
 
 message TodoItem {
@@ -64,27 +51,27 @@ message CreateTodoItemDto {
     string todoList = 5;
 }
 
-message CommandTodoItemResponse {
-    string title = 1;
-    string description = 2;
-    string priority = 3;
-}
-
-
-
 message UpdateTodoItemDto {
     string id = 1;
     string title = 2;
     string description = 3;
     string priority = 4;
     string user = 5;
+    string todoList = 6;
 
 }
-
 
 message DeleteTodoItemDto{
     string id = 1;
     string user = 2;
+}
+
+message CommandTodoItemResponse {
+    string id = 1;
+    string title = 2;
+    string description = 3;
+    string priority = 4;
+    string message = 5;
 }
 
 
@@ -96,18 +83,20 @@ message FindTodoItemsByTodoListDto {
     string todoListId=1;
 }
 
-message FindTodoListTodoItemsDto{
-    string todolist = 1;
+message TodoLists{
+    repeated TodoList todoLists = 1;
 }
 
-message EmptyQurey {}
+message TodoItems{
+    repeated TodoItem todoItems = 1;
+}
 
 
 service TodoService {
     rpc FindTodoList(FindMyTodoListDto) returns(TodoLists){}
     rpc CreateTodoList(CreateTodoListDto) returns(CommandTodoListResponse){}
     rpc UpdateTodoList(UpdateTodoListDto) returns(CommandTodoListResponse){}
-    rpc DeleteTodoList(DeleteTodoListDto) returns(DeleteResponse){}
+    rpc DeleteTodoList(DeleteTodoListDto) returns(CommandTodoListResponse){}
 
 }
 
@@ -115,6 +104,6 @@ service TodoItemService {
     rpc FindTodoItemsByList(FindTodoItemsByTodoListDto) returns(TodoItems){}
     rpc CreateTodoItem(CreateTodoItemDto) returns(CommandTodoItemResponse){}
     rpc UpdateTodoItem(UpdateTodoItemDto) returns(CommandTodoItemResponse){}
-    rpc DeleteTodoItem(DeleteTodoListDto) returns(DeleteResponse){}
+    rpc DeleteTodoItem(DeleteTodoItemDto) returns(CommandTodoItemResponse){}
 }
 

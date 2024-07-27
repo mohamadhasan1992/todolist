@@ -41,10 +41,13 @@ export class TodolistController {
     @Body() updateTodolistDto: GatewayUpdateTodoListDto,
     @CurrentUser() user: IAuthenticatedUser
   ) {
+    const {
+      label
+    } = updateTodolistDto;
     return this.todolistService.update({
       id,
       user: user._id,
-      ...updateTodolistDto
+      label
     });
   }
 

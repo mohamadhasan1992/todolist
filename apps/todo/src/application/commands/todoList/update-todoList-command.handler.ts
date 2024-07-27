@@ -29,6 +29,7 @@ export class UpdateTodoListHandler implements ICommandHandler<UpdateTodoListComm
       id: todoList.getId(),
       label: todoList.getLabel(),
       user: todoList.getUser(),
+      message: "Todo List updated successfully!"
     }
   }
 }

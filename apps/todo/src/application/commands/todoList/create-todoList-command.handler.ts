@@ -1,7 +1,7 @@
 import { CommandHandler, EventPublisher, ICommandHandler } from '@nestjs/cqrs';
 import { TodoListEntityFactory } from 'apps/todo/src/domain/entityFactory/TodoListEntity.factory';
 import { CreateTodoListCommand } from './create-todoList.command';
-import { TodoList } from 'apps/todo/src/domain/entities/todo.entity';
+import { CommandTodoListResponse } from '@app/common';
 
 
 
@@ -13,13 +13,18 @@ export class CreateTodoListHandler implements ICommandHandler<CreateTodoListComm
     private readonly eventPublisher: EventPublisher
   ) {}
 
-  async execute({ createTodoListDto }: CreateTodoListCommand): Promise<TodoList> {
+  async execute({ createTodoListDto }: CreateTodoListCommand): Promise<CommandTodoListResponse> {
     const {label, user} = createTodoListDto;
 
     const todoList = this.eventPublisher.mergeObjectContext(
       await this.todoListFactory.create(label, user)
     );
     todoList.commit()
-    return todoList
+    return {
+      message: "Todo list created successfully",
+      id: todoList.getId(),
+      user: todoList.getUser(),
+      label: todoList.getLabel()
+    }
   }
 }

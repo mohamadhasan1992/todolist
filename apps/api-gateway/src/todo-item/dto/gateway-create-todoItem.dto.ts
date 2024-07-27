@@ -1,11 +1,10 @@
 import { IsNotEmpty, IsString } from "@nestjs/class-validator";
 
 
-export class GatewayCreateTodoItemDto {
+export class GatewayCreateTodoItemDto{
     @IsString()
     @IsNotEmpty()
     title: string;
-
 
     @IsString()
     @IsNotEmpty()
@@ -15,8 +14,8 @@ export class GatewayCreateTodoItemDto {
     @IsNotEmpty()
     priority: string;
 
-
     @IsString()
     @IsNotEmpty()
     todoList: string;
+
 }

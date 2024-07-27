@@ -1,7 +1,7 @@
 import { CommandHandler, EventPublisher, ICommandHandler } from "@nestjs/cqrs";
 import { TodoItemEntityFactory } from "apps/todo/src/domain/entityFactory/TodoItemEntity.factory";
 import { CreateTodoItemCommand } from "./create-todoItem.command";
-import { TodoItem } from "@app/common";
+import { CommandTodoItemResponse } from "@app/common";
 
 
 
@@ -13,7 +13,7 @@ export class CreateTodoItemHandler implements ICommandHandler<CreateTodoItemComm
     private readonly eventPublisher: EventPublisher
   ) {}
 
-  async execute({ createTodoItemDto }: CreateTodoItemCommand): Promise<TodoItem> {
+  async execute({ createTodoItemDto }: CreateTodoItemCommand): Promise<CommandTodoItemResponse> {
     const {title, description, priority, todoList} = createTodoItemDto;
     const todoItem = this.eventPublisher.mergeObjectContext(
       await this.todoItemFactory.create(title, description, priority, todoList)
@@ -23,7 +23,8 @@ export class CreateTodoItemHandler implements ICommandHandler<CreateTodoItemComm
       id: todoItem.getId(),
       title: todoItem.getTitle(),
       description: todoItem.getDescription(),
-      priority: todoItem.getPriority()
+      priority: todoItem.getPriority(),
+      message: "Todo Item created successfully"
     }
   }
 }

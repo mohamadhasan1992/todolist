@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body } from '@nestjs/common';
+import { Controller } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { GetTodoItemsQuery } from '../../application/queries/get-todoItem-query';
 import { CreateTodoItemDto } from '../../application/dto/todoItem/CreateTodoItem.dto';
@@ -23,7 +23,11 @@ export class TodoItemController implements TodoItemServiceController {
   async createTodoItem(
     @Payload() createTodoItemDto :CreateTodoItemDto
   ): Promise<CommandTodoItemResponse>{
-    return await this.commandBus.execute(new CreateTodoItemCommand(createTodoItemDto ));
+    const newTodoItem = await this.commandBus.execute(new CreateTodoItemCommand(createTodoItemDto ));
+    return {
+      message: "Todo item created successFully",
+      ...newTodoItem
+    }
   }
 
   
@@ -35,8 +39,9 @@ export class TodoItemController implements TodoItemServiceController {
   async deleteTodoItem(
     @Payload() deleteTodoItemDto: DeleteTodoItemDto
   ){
-    await this.commandBus.execute(new DeleteTodoItemCommand(deleteTodoItemDto))
+    const deletedTodoItem = await this.commandBus.execute(new DeleteTodoItemCommand(deleteTodoItemDto))
     return {
+      ...deletedTodoItem,
       message: "TodoItem deleted successfully!"
     }
   }

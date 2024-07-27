@@ -3,8 +3,8 @@ import { TodoItemService } from './todo-item.service';
 import { IAuthenticatedUser } from '@app/common';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
-import { GatewayCreateTodoItemDto } from './dto/gateway-create-todo-item.dto';
-import { GatewayUpdateTodoItemDto } from './dto/gateway-update-todo-item.dto copy';
+import { GatewayCreateTodoItemDto } from './dto/gateway-create-todoItem.dto';
+import { GatewayUpdateTodoItemDto } from './dto/gateway-update-todoItem.dto';
 
 
 
@@ -25,8 +25,12 @@ export class TodoItemController {
     @Body() createTodoItemDto: GatewayCreateTodoItemDto,
     @CurrentUser() user: IAuthenticatedUser
   ) {
+    const {description, priority, title, todoList} = createTodoItemDto;
     return this.todoItemService.create({
-      ...createTodoItemDto,
+      description, 
+      priority, 
+      title,
+      todoList,
       user: user._id
     });
   }
@@ -37,8 +41,12 @@ export class TodoItemController {
     @Body() updateTodoItemDto: GatewayUpdateTodoItemDto,
     @CurrentUser() user: IAuthenticatedUser
   ) {
+    const {description, priority, title, todoList} = updateTodoItemDto;
     return this.todoItemService.update({
-      ...updateTodoItemDto,
+      description, 
+      priority, 
+      title, 
+      todoList,
       id,
       user: user._id
     });

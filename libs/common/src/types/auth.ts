@@ -4,23 +4,6 @@ import { Observable } from "rxjs";
 
 export const protobufPackage = "auth";
 
-export interface User {
-  Id: string;
-  name: string;
-  email: string;
-  password: string;
-}
-
-export interface CreateUserDto {
-  name: string;
-  email: string;
-  password: string;
-}
-
-export interface FindOneUserDto {
-  Id: string;
-}
-
 export interface SignUpUserResponse {
   message: string;
 }
@@ -47,16 +30,8 @@ export interface GetMeUserResponse {
   email: string;
 }
 
-export interface Empty {
-}
-
 export interface GetMeDto {
   userId: string;
-}
-
-export interface Error {
-  code: number;
-  message: string;
 }
 
 export const AUTH_PACKAGE_NAME = "auth";

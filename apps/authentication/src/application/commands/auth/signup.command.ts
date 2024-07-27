@@ -1,9 +1,9 @@
-import { SignupUserDto } from "../../dto/auth/signup.dto";
+import { SignUpUserDto } from "@app/common";
 
 
 export class SignUpCommand {
     constructor(
-      public readonly signUpUserDto: SignupUserDto
+      public readonly signUpUserDto: SignUpUserDto
     ) {}
 }
   
