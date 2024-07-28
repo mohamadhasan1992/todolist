@@ -14,29 +14,28 @@ export class TodolistController {
   constructor(private readonly todolistService: TodolistService) {}
 
   @Post()
-  create(
+  async create(
     @CurrentUser() user: IAuthenticatedUser,
     @Body() {label}: GatewayCreateTodoListDto
   ) {
-    console.log("user", user)
-    return this.todolistService.create({
+    return await this.todolistService.create({
       user: user._id,
       label
     });
   }
 
   @Get()
-  findMyTodolists(
+  async findMyTodolists(
     @CurrentUser() user: IAuthenticatedUser,
   ) {
-    return this.todolistService.findAll(
+    return await this.todolistService.findAll(
       {userId: user._id}
     );
   }
 
 
   @Patch(':id')
-  update(
+  async update(
     @Param('id') id: string, 
     @Body() updateTodolistDto: GatewayUpdateTodoListDto,
     @CurrentUser() user: IAuthenticatedUser
@@ -44,7 +43,7 @@ export class TodolistController {
     const {
       label
     } = updateTodolistDto;
-    return this.todolistService.update({
+    return await this.todolistService.update({
       id,
       user: user._id,
       label
@@ -52,11 +51,11 @@ export class TodolistController {
   }
 
   @Delete(':id')
-  remove(
+  async remove(
     @Param('id') id: string,
     @CurrentUser() user: IAuthenticatedUser
   ) {
-    return this.todolistService.remove({
+    return await this.todolistService.remove({
       id,
       user: user._id
     });

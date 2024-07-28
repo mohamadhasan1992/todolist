@@ -1,7 +1,8 @@
 import { CommandHandler, EventPublisher, ICommandHandler } from "@nestjs/cqrs";
 import { UpdateTodoItemCommand } from "./update-todoItem.command";
-import { TodoItemEntityRepository } from "apps/todo/src/infrastructure/repositories/todoItem-entity.repository";
 import { CommandTodoItemResponse } from "@app/common";
+import { Inject } from "@nestjs/common";
+import { ITodoItemRepository } from "apps/todo/src/domain/repositories/todoItem.repository.interface";
 
 
 
@@ -9,7 +10,8 @@ import { CommandTodoItemResponse } from "@app/common";
 @CommandHandler(UpdateTodoItemCommand)
 export class UpdateTodoItemHandler implements ICommandHandler<UpdateTodoItemCommand> {
   constructor(
-    private readonly todoItemEntityRepository: TodoItemEntityRepository,
+    @Inject("TodoItemRepository")
+    private readonly todoItemRepository: ITodoItemRepository,
     private readonly eventPublisher: EventPublisher
   ) {}
 
@@ -18,14 +20,14 @@ export class UpdateTodoItemHandler implements ICommandHandler<UpdateTodoItemComm
 
     // Fetch the existing todo item
     const todoItem = this.eventPublisher.mergeObjectContext(
-      await this.todoItemEntityRepository.findOneById(id),
+      await this.todoItemRepository.findOneById(id),
     );
 
     // Apply the updates
     todoItem.updateDetails(title, description, priority);
 
     // Save the updated todo item back to the repository
-    await this.todoItemEntityRepository.findOneAndReplaceById(id, todoItem);
+    await this.todoItemRepository.findOneAndReplaceById(id, todoItem);
     
     // Commit the changes to trigger events
     todoItem.commit();

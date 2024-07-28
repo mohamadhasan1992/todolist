@@ -6,6 +6,7 @@ export interface IUserRepository {
   findByEmail(email: string): Promise<User|null>;
   findById(id: string): Promise<User | null>;
   findAll(): Promise<User[]>;
-  save(todo: User): Promise<void>;
+  create(user: User): Promise<User>;
+  save(user: User): Promise<void>;
   deleteById(id: string): Promise<void>;
 }

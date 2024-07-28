@@ -6,7 +6,8 @@ import { catchError, throwError } from "rxjs";
 
 
 export const hashData = async (data: string) => {
-    return await bcrypt.hash(data, 10);
+    const salt = await bcrypt.genSalt(10)
+    return await bcrypt.hash(data, salt);
 }
 
 

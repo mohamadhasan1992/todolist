@@ -44,7 +44,7 @@ import { AuthQueryHandlers } from './application/queries';
   controllers: [AuthController],
   providers: [
     AuthService,
-    UserEntityRepository,
+    {provide: "UserRepository", useClass: UserEntityRepository},
     UserEntityFactory,
     UserSchemaFactory,
     ...AuthCommandHandlers,

@@ -16,6 +16,7 @@ import { AuthController } from './presentation/controllers/auth.controller';
 import { AuthService } from './application/services/auth.service';
 import { UserJwtStrategy } from './infrustructure/auth/strategies/jwt.strategy';
 import { RpcExceptionFilter } from './domain/exceptions/rpc-exception.filter';
+import { HealthController } from './presentation/controllers/health.controller';
 
 
 
@@ -61,6 +62,7 @@ import { RpcExceptionFilter } from './domain/exceptions/rpc-exception.filter';
     AuthController,
     TodolistController,
     TodoItemController,
+    HealthController
   ],
   providers: [
     TodolistService,

@@ -19,17 +19,17 @@ export class AuthService implements OnModuleInit {
     }
 
 
-    sinupUser(signUpUserDto: SignUpUserDto){
-      return handleError(this.authService.sinUpUser(signUpUserDto))
+    async sinupUser(signUpUserDto: SignUpUserDto){
+      return await handleError(this.authService.sinUpUser(signUpUserDto))
     } 
 
-    loginUser(loginUserDto: LoginUserDto){
-      return handleError(this.authService.loginUser(loginUserDto))
+    async loginUser(loginUserDto: LoginUserDto){
+      return await handleError(this.authService.loginUser(loginUserDto))
     }
 
 
-    getMe(getMeDto: GetMeDto): Observable<IAuthenticatedUser>{
-      return handleError(this.authService.getMe(getMeDto));
+    async getMe(getMeDto: GetMeDto): Promise<Observable<IAuthenticatedUser>>{
+      return await handleError(this.authService.getMe(getMeDto));
     }
 
 }

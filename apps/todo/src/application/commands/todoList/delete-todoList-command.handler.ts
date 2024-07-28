@@ -1,10 +1,10 @@
 import { CommandHandler, EventPublisher, ICommandHandler } from '@nestjs/cqrs';
 import { DeleteTodoListCommand } from './delete-todoList.command';
-import { TodoListEntityRepository } from 'apps/todo/src/infrastructure/repositories/todoList-entity.repository';
 import { RpcException } from '@nestjs/microservices';
 import { TodoListDeletedEvent } from 'apps/todo/src/domain/events/todoList/todoList-deleted.event';
-import { Types } from 'mongoose';
 import { CommandTodoListResponse } from '@app/common';
+import { Inject } from '@nestjs/common';
+import { ITodoListRepository } from 'apps/todo/src/domain/repositories/todo.repository.interface';
 
 
 
@@ -12,7 +12,8 @@ import { CommandTodoListResponse } from '@app/common';
 @CommandHandler(DeleteTodoListCommand)
 export class DeleteTodoListHandler implements ICommandHandler<DeleteTodoListCommand> {
   constructor(
-    private readonly todoListRepository: TodoListEntityRepository,
+    @Inject("TodoListRepository")
+    private readonly todoListRepository: ITodoListRepository,
     private readonly eventPublisher: EventPublisher
   ) {}
 
@@ -24,7 +25,7 @@ export class DeleteTodoListHandler implements ICommandHandler<DeleteTodoListComm
     }
 
     const todoListContext = this.eventPublisher.mergeObjectContext(todoList);
-    await this.todoListRepository.delete({ _id: new Types.ObjectId(id) });
+    await this.todoListRepository.delete(id);
     todoListContext.apply(new TodoListDeletedEvent(id));
     todoListContext.commit();
 

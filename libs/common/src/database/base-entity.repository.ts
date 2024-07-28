@@ -29,6 +29,5 @@ export abstract class BaseEntityRepository<
 
   async delete(entityFilterQuery: FilterQuery<TSchema>): Promise<void> {
     await this.entityModel.findOneAndDelete(entityFilterQuery).exec();
-
   }
 }

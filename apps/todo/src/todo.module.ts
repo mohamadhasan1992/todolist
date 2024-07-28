@@ -46,8 +46,8 @@ import { TodoQueryHandlers } from './application/queries';
     TodoItemController
 ],
   providers: [
-    TodoListEntityRepository,
-    TodoItemEntityRepository,
+    { provide: 'TodoListRepository', useClass: TodoListEntityRepository },
+    { provide: 'TodoItemRepository', useClass: TodoItemEntityRepository },
     TodoListEntityFactory,
     TodoItemEntityFactory,
     TodoListSchemaFactory,

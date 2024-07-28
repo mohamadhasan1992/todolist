@@ -18,4 +18,8 @@ export class UserEntityRepository extends BaseEntityRepository<UserSchema, User>
         super(userModel, userSchemaFactory);
     }
 
+    async findByEmail(email: string): Promise<User>{
+        return await this.findOne({email})
+    }
+
 }

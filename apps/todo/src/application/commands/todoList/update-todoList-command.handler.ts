@@ -1,8 +1,8 @@
 import { CommandHandler, EventPublisher, ICommandHandler } from '@nestjs/cqrs';
 import { UpdateTodoListCommand } from './update-todoList.command';
-import { TodoListEntityRepository } from 'apps/todo/src/infrastructure/repositories/todoList-entity.repository';
 import { CommandTodoListResponse} from '@app/common';
-import { TodoItemEntityRepository } from 'apps/todo/src/infrastructure/repositories/todoItem-entity.repository';
+import { Inject } from '@nestjs/common';
+import { ITodoListRepository } from 'apps/todo/src/domain/repositories/todo.repository.interface';
 
 
 
@@ -10,8 +10,8 @@ import { TodoItemEntityRepository } from 'apps/todo/src/infrastructure/repositor
 @CommandHandler(UpdateTodoListCommand)
 export class UpdateTodoListHandler implements ICommandHandler<UpdateTodoListCommand> {
   constructor(
-    private readonly todoListRepository: TodoListEntityRepository,
-    private readonly todoItemsRepository: TodoItemEntityRepository,
+    @Inject("TodoListRepository")
+    private readonly todoListRepository: ITodoListRepository,
     private readonly eventPublisher: EventPublisher
   ) {}
 

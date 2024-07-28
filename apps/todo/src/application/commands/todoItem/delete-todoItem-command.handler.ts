@@ -1,8 +1,8 @@
 import { CommandHandler, EventPublisher, ICommandHandler } from "@nestjs/cqrs";
-import { TodoItemEntityRepository } from "apps/todo/src/infrastructure/repositories/todoItem-entity.repository";
-import { TodoItem } from "apps/todo/src/domain/entities/todoItem.entity";
 import { DeleteTodoItemCommand } from "./delete-todoItem.command";
 import { CommandTodoItemResponse } from "@app/common";
+import { ITodoItemRepository } from "apps/todo/src/domain/repositories/todoItem.repository.interface";
+import { Inject } from "@nestjs/common";
 
 
 
@@ -10,7 +10,8 @@ import { CommandTodoItemResponse } from "@app/common";
 @CommandHandler(DeleteTodoItemCommand)
 export class DeleteTodoItemHandler implements ICommandHandler<DeleteTodoItemCommand> {
   constructor(
-    private readonly todoItemEntityRepository: TodoItemEntityRepository,
+    @Inject("TodoItemRepository")
+    private readonly todoItemRepository: ITodoItemRepository,
     private readonly eventPublisher: EventPublisher
   ) {}
 
@@ -19,10 +20,10 @@ export class DeleteTodoItemHandler implements ICommandHandler<DeleteTodoItemComm
 
     // Fetch the existing todo item
     const todoItem = this.eventPublisher.mergeObjectContext(
-      await this.todoItemEntityRepository.findOneById(id),
+      await this.todoItemRepository.findOneById(id),
     );
 
-    await this.todoItemEntityRepository.delete({_id: id});
+    await this.todoItemRepository.delete(id);
     
     // Commit the changes to trigger events
     todoItem.commit();

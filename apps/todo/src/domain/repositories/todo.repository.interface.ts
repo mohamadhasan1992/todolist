@@ -1,11 +1,13 @@
+import { FilterQuery } from "mongoose";
 import { TodoList } from "../entities/todo.entity";
 
 
 
 export interface ITodoListRepository {
-  findById(id: string): Promise<TodoList | null>;
-  findAll(): Promise<TodoList[]>;
-  create(todo: TodoList): Promise<TodoList>;
+  findOneById(id: string): Promise<TodoList | null>;
+  findAll(filterQuery: FilterQuery<TodoList>): Promise<TodoList[]>;
+  create(TodoList): Promise<TodoList>,
   save(todo: TodoList): Promise<TodoList>;
-  deleteById(id: string): Promise<void>;
+  delete(id: string): Promise<void>;
+  findOneAndReplaceById(id: string, entity: TodoList): Promise<void>
 }

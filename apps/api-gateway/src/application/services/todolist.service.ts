@@ -28,21 +28,21 @@ export class TodolistService implements OnModuleInit {
   }
 
 
-  create(createTodolistDto: CreateTodoListDto) {
-    return handleError(this.todoService.createTodoList(createTodolistDto));
+  async create(createTodolistDto: CreateTodoListDto) {
+    return await handleError(this.todoService.createTodoList(createTodolistDto));
   }
 
-  findAll(
+  async findAll(
     findMyTodoListDto: FindMyTodoListDto
   ) {
-    return handleError(this.todoService.findTodoList(findMyTodoListDto));
+    return await handleError(this.todoService.findTodoList(findMyTodoListDto));
   }
 
-  update(updateTodolistDto: UpdateTodoListDto) {
-    return handleError(this.todoService.updateTodoList(updateTodolistDto));
+  async update(updateTodolistDto: UpdateTodoListDto) {
+    return await handleError(this.todoService.updateTodoList(updateTodolistDto));
   }
 
-  remove(deleteTodoListDto: DeleteTodoItemDto) {
-    return handleError(this.todoService.deleteTodoList(deleteTodoListDto))
+  async remove(deleteTodoListDto: DeleteTodoItemDto) {
+    return await handleError(this.todoService.deleteTodoList(deleteTodoListDto))
   }
 }

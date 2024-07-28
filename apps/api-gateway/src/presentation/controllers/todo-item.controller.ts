@@ -14,19 +14,19 @@ export class TodoItemController {
   constructor(private readonly todoItemService: TodoItemService) {}
 
   @Get(":id")
-  getItemsByListId(
+  async getItemsByListId(
     @Param("id") todoListId: string,
   ){
-    return this.todoItemService.find(todoListId)
+    return await this.todoItemService.find(todoListId)
   }
 
   @Post()
-  create(
+  async create(
     @Body() createTodoItemDto: GatewayCreateTodoItemDto,
     @CurrentUser() user: IAuthenticatedUser
   ) {
     const {description, priority, title, todoList} = createTodoItemDto;
-    return this.todoItemService.create({
+    return await this.todoItemService.create({
       description, 
       priority, 
       title,
@@ -36,13 +36,13 @@ export class TodoItemController {
   }
 
   @Patch(':id')
-  update(
+  async update(
     @Param('id') id: string, 
     @Body() updateTodoItemDto: GatewayUpdateTodoItemDto,
     @CurrentUser() user: IAuthenticatedUser
   ) {
     const {description, priority, title, todoList} = updateTodoItemDto;
-    return this.todoItemService.update({
+    return await this.todoItemService.update({
       description, 
       priority, 
       title, 
@@ -53,12 +53,12 @@ export class TodoItemController {
   }
 
   @Delete(':id')
-  remove(
+  async remove(
     @Param('id') id: string,
     @CurrentUser() user: IAuthenticatedUser
   
   ) {
-    return this.todoItemService.remove({
+    return await this.todoItemService.remove({
       id,
       user: user._id
     });

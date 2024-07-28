@@ -39,7 +39,7 @@ export class UserJwtStrategy extends PassportStrategy(Strategy, 'jwt'){
         // If user not found, fetch user from authService
         try {
             const user: IAuthenticatedUser = await lastValueFrom(
-                this.authService.getMe({ userId }).pipe(
+                (await this.authService.getMe({ userId })).pipe(
                     map((user: IAuthenticatedUser) => {
                         return user;
                     }),

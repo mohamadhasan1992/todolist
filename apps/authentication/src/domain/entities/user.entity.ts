@@ -1,4 +1,7 @@
+import { compareHash, hashData } from "@app/common";
 import { AggregateRoot } from "@nestjs/cqrs";
+import * as bcrypt from "bcryptjs";
+
 
 export class User extends AggregateRoot{
     constructor(
@@ -26,9 +29,14 @@ export class User extends AggregateRoot{
       return this.password;
     }
 
-    validatePassword(password: string): boolean{
-      return this.password === password
+    async validatePassword(password: string): Promise<boolean>{
+      return await compareHash(password, this.password)
     }
 
+    public async setPassword(password: string) {
+      const hashedPass = await hashData(password);
+      this.password = hashedPass;
+      return this;
+    }
 
 }

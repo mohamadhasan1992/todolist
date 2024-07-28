@@ -1,6 +1,7 @@
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 import { GetTodoListsQuery } from './get-todoList-query';
-import { TodoListEntityRepository } from '../../infrastructure/repositories/todoList-entity.repository';
+import { Inject } from '@nestjs/common';
+import { ITodoListRepository } from '../../domain/repositories/todo.repository.interface';
 
 
 
@@ -8,7 +9,10 @@ import { TodoListEntityRepository } from '../../infrastructure/repositories/todo
 
 @QueryHandler(GetTodoListsQuery)
 export class GetTodoListsHandler implements IQueryHandler<GetTodoListsQuery> {
-  constructor(private readonly todoRepository: TodoListEntityRepository) {}
+  constructor(
+    @Inject("TodoListRepository")
+    private readonly todoRepository: ITodoListRepository
+  ) {}
 
   async execute({userId}: GetTodoListsQuery) {
     return this.todoRepository.findAll({user: userId});

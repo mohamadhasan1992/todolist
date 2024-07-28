@@ -2,16 +2,18 @@ import { EntityFactory } from "@app/common/database/entity.factory";
 import { TodoList } from "../entities/todo.entity";
 import { Types } from "mongoose";
 import { TodoListEntityRepository } from "../../infrastructure/repositories/todoList-entity.repository";
-import { Injectable } from "@nestjs/common";
+import { Inject, Injectable } from "@nestjs/common";
 import { TodoListCreatedEvent } from "../events/todoList/todoList-created.event";
 import { RpcException } from "@nestjs/microservices";
+import { ITodoListRepository } from "../repositories/todo.repository.interface";
 
 
 
 @Injectable()
 export class TodoListEntityFactory implements EntityFactory<TodoList>{
     constructor(
-        private readonly todoListRepository: TodoListEntityRepository
+        @Inject("TodoListRepository")
+        private readonly todoListRepository: ITodoListRepository
     ){}
 
     async create(label: string, user: string): Promise<TodoList> {

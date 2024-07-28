@@ -24,20 +24,20 @@ export class TodoItemService implements OnModuleInit {
     this.todoItemService = this.client.getService<TodoItemServiceClient>(TODO_ITEM_SERVICE_NAME)
   }
 
-  find(todoListId: string){
-    return handleError(this.todoItemService.findTodoItemsByList({todoListId}))
+  async find(todoListId: string){
+    return await handleError(this.todoItemService.findTodoItemsByList({todoListId}))
   }
 
-  create(createTodoItemDto: CreateTodoItemDto) {
-    return handleError(this.todoItemService.createTodoItem(createTodoItemDto));
+  async create(createTodoItemDto: CreateTodoItemDto) {
+    return await handleError(this.todoItemService.createTodoItem(createTodoItemDto));
   }
 
 
-  update(updateTodoItemDto: UpdateTodoItemDto) {
-    return handleError(this.todoItemService.updateTodoItem(updateTodoItemDto));
+  async update(updateTodoItemDto: UpdateTodoItemDto) {
+    return await handleError(this.todoItemService.updateTodoItem(updateTodoItemDto));
   }
 
-  remove(deleteTodoItemDto: DeleteTodoItemDto) {
-    return handleError(this.todoItemService.deleteTodoItem(deleteTodoItemDto));
+  async remove(deleteTodoItemDto: DeleteTodoItemDto) {
+    return await handleError(this.todoItemService.deleteTodoItem(deleteTodoItemDto));
   }
 }
