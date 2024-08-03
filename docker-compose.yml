@@ -1,3 +1,5 @@
+version: '3.8'
+
 services:
   api-gateway:
     container_name: api-gateway
@@ -18,6 +20,7 @@ services:
       - .:/usr/src/app
       - ./proto/:/usr/src/app/proto
       - /usr/src/app/node_modules
+
   authentication:
     container_name: authentication
     build:
@@ -29,16 +32,15 @@ services:
       - ./apps/authentication/.env
     ports:
       - "50051:50051"
-    depends_on:
-      - mongo
     networks:
+      - mongo-cluster-network
       - grpc-net
-      - mongo-net
       - redis_net
     volumes:
       - .:/usr/src/app
       - ./proto/:/usr/src/app/proto
       - /usr/src/app/node_modules
+
   todo:
     container_name: todo
     build:
@@ -50,53 +52,92 @@ services:
       - ./apps/todo/.env
     ports:
       - "50052:50051"
-      - "6006:6006"
     networks:
-      - mongo-net
+      - mongo-cluster-network
       - grpc-net
     volumes:
       - .:/usr/src/app
       - ./proto/:/usr/src/app/proto
       - /usr/src/app/node_modules
-    depends_on:
-      - mongo
 
-  mongo:
-    container_name: mongo
-    image: mongo:5.0
-    networks:
-      - mongo-net
-    volumes:
-      - 'mongo_data:/data/db'
   redis:
-     container_name: redis
-     image: redis
-     restart: always
-     ports:
-      - '6379:6379'
-     networks:
-      - redis_net
-  postgres:
-    container_name: postgres
-    image: postgres:12.7
+    container_name: redis
+    image: redis
+    restart: always
     ports:
-      - "5432:5432"
+      - '6379:6379'
     networks:
-      - postgres-net
-    environment:
-      POSTGRES_DB: todos
-      POSTGRES_USER: mohamad
-      POSTGRES_PASSWORD: hasan
+      - redis_net
+
+  # postgres:
+  #   container_name: postgres
+  #   image: postgres:12.7
+  #   ports:
+  #     - "5432:5432"
+  #   networks:
+  #     - postgres-net
+  #   environment:
+  #     POSTGRES_DB: todos
+  #     POSTGRES_USER: mohamad
+  #     POSTGRES_PASSWORD: hasan
+  #   volumes:
+  #     - "postgres_data:/var/lib/postgresql/data"
+
+  primary:
+    image: mongo:5.0
+    container_name: primary
+    ports:
+      - 27017:27017
+    # environment:
+    #   - MONGO_INITDB_ROOT_USERNAME=root
+    #   - MONGO_INITDB_ROOT_PASSWORD=example
     volumes:
-      - "postgres_data:/var/lib/postgresql/data"
-  
-  
+      - primary_data:/data/db
+    networks:
+      - mongo-cluster-network
+    entrypoint: [ "/usr/bin/mongod", "--bind_ip_all", "--replSet", "dbrs" ]
+
+  secondary:
+    image: mongo:5.0
+    container_name: secondary
+    ports:
+      - 27018:27017
+    # environment:
+    #   - MONGO_INITDB_ROOT_USERNAME=root
+    #   - MONGO_INITDB_ROOT_PASSWORD=example
+    volumes:
+      - secondary_data:/data/db
+    networks:
+      - mongo-cluster-network
+    entrypoint: [ "/usr/bin/mongod", "--bind_ip_all", "--replSet", "dbrs" ]
+  mongo-express:
+    image: mongo-express:latest
+    container_name: mongo-express
+    ports:
+      - 8081:8081
+    environment:
+      # - ME_CONFIG_MONGODB_ADMINUSERNAME=root
+      # - ME_CONFIG_MONGODB_ADMINPASSWORD=example
+      - ME_CONFIG_MONGODB_SERVER=primary
+    networks:
+      - mongo-cluster-network
 
 networks:
-  mongo-net:
+  mongo-cluster-network:
   redis_net:
   postgres-net:
   grpc-net:
+
 volumes: 
   postgres_data:
-  mongo_data:
+  primary_data:
+  secondary_data:
+
+# rs.initiate({
+#   _id: "dbrs",
+#   members: [
+#     { _id: 0, host: "primary:27017" },
+#     { _id: 1, host: "secondary:27017" }
+#   ]
+# })
+

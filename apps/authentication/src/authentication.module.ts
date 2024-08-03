@@ -32,13 +32,20 @@ import { AuthQueryHandlers } from './application/queries';
       inject: [ConfigService]
     }),
     CqrsModule,
-    DatabaseModule,
+    DatabaseModule.forRoot('primary'),
+    DatabaseModule.forRoot('secondary'),
     DatabaseModule.forFeature([
       {
         name: UserSchema.name,
         schema: SchemaFactory.createForClass(UserSchema)
-      }
-    ]),
+      },
+    ], "primary"),
+    DatabaseModule.forFeature([
+      {
+        name: UserSchema.name,
+        schema: SchemaFactory.createForClass(UserSchema)
+      },
+    ], "secondary"),
     CacheModule.registerAsync(RedisOptions),
   ],
   controllers: [AuthController],
