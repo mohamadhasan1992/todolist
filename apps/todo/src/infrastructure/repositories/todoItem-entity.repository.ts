@@ -11,7 +11,7 @@ import { TodoItemSchemaFactory } from "../database/schema-factory/todoItem-schem
 @Injectable()
 export class TodoItemEntityRepository extends BaseEntityRepository<TodoItemSchema, TodoItem>{
     constructor(
-        @InjectModel("commandTodoItem")
+        @InjectModel("commandTodoItem", "command")
         todoItemModel: Model<TodoItemSchema>,
         todoItemSchemaFactory: TodoItemSchemaFactory
     ){

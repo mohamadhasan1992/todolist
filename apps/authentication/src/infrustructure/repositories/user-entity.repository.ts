@@ -11,7 +11,7 @@ import { UserSchemaFactory } from "../database/schema-factory/user-schema.factor
 @Injectable()
 export class UserEntityRepository extends BaseEntityRepository<UserSchema, User>{
     constructor(
-        @InjectModel("queryUser")
+        @InjectModel("queryUser", "query")
         userModel: Model<UserSchema>,
         userSchemaFactory: UserSchemaFactory
     ){

@@ -73,21 +73,21 @@ import * as Joi from 'joi';
   ),
   ],
   controllers: [
-    // TodoListController, 
-    // TodoItemController
+    TodoListController, 
+    TodoItemController
 ],
   providers: [
-    // { provide: 'TodoListRepository', useClass: TodoListEntityRepository },
-    // { provide: 'TodoItemRepository', useClass: TodoItemEntityRepository },
-    // TodoListEntityFactory,
-    // TodoItemEntityFactory,
-    // TodoListSchemaFactory,
-    // TodoItemSchemaFactory,
-    // ...TodoCommandHandlers,
-    // ...TodoEventHandlers,
-    // ...TodoQueryHandlers,
-    // GetTodoListsHandler,
-    // GetTodoItemsHandler,
+    { provide: 'TodoListRepository', useClass: TodoListEntityRepository },
+    { provide: 'TodoItemRepository', useClass: TodoItemEntityRepository },
+    TodoListEntityFactory,
+    TodoItemEntityFactory,
+    TodoListSchemaFactory,
+    TodoItemSchemaFactory,
+    ...TodoCommandHandlers,
+    ...TodoEventHandlers,
+    ...TodoQueryHandlers,
+    GetTodoListsHandler,
+    GetTodoItemsHandler,
   ],
 })
 export class TodoModule {}

@@ -24,6 +24,7 @@ export class DatabaseModule {
       imports: [
         MongooseModule.forFeature(models, connectionName),
       ],
+      exports: [MongooseModule],
     };
   }
 }
