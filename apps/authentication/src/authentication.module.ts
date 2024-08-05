@@ -14,6 +14,7 @@ import { UserSchemaFactory } from './infrustructure/database/schema-factory/user
 import { AuthService } from './application/services/auth.service';
 import { JwtModule } from '@nestjs/jwt';
 import { AuthQueryHandlers } from './application/queries';
+import * as Joi from 'joi';
 
 
 
@@ -22,6 +23,15 @@ import { AuthQueryHandlers } from './application/queries';
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
+      validationSchema: Joi.object({
+        HTTP_PORT: Joi.number().required(),
+        JWT_SECRET: Joi.string().required(),
+        JWT_EXPIRES_IN: Joi.string().required(),
+        REDIS_HOST: Joi.string().required(),
+        REDISE_PORT: Joi.string().required(),
+        MONGO_QUERY_URI: Joi.string().required(),
+        MONGO_COMMAND_URI: Joi.string().required(),
+      })
     }),
     JwtModule.registerAsync({
       useFactory: async(configService: ConfigService) => ({
@@ -32,20 +42,34 @@ import { AuthQueryHandlers } from './application/queries';
       inject: [ConfigService]
     }),
     CqrsModule,
-    DatabaseModule.forRoot('primary'),
-    DatabaseModule.forRoot('secondary'),
+    DatabaseModule.forRootAsync('command', {
+      useFactory: async (configService: ConfigService) => ({
+        uri: configService.get<string>('MONGO_COMMAND_URI'),
+      }),
+      inject: [ConfigService],
+    }),
+    DatabaseModule.forRootAsync('query', {
+      useFactory: async (configService: ConfigService) => ({
+        uri: configService.get<string>('MONGO_QUERY_URI'),
+      }),
+      inject: [ConfigService],
+    }),
     DatabaseModule.forFeature([
       {
-        name: UserSchema.name,
+        name: "queryUser",
         schema: SchemaFactory.createForClass(UserSchema)
       },
-    ], "primary"),
+    ], 
+    "query"
+    ),
     DatabaseModule.forFeature([
       {
-        name: UserSchema.name,
+        name: "commandUser",
         schema: SchemaFactory.createForClass(UserSchema)
       },
-    ], "secondary"),
+    ], 
+    "command"
+    ),
     CacheModule.registerAsync(RedisOptions),
   ],
   controllers: [AuthController],

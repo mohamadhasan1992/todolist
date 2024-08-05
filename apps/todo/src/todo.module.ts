@@ -12,12 +12,13 @@ import { TodoListEntityRepository } from './infrastructure/repositories/todoList
 import { TodoItemEntityRepository } from './infrastructure/repositories/todoItem-entity.repository';
 import { TodoListSchemaFactory } from './infrastructure/database/schema-factory/todoList-schema.factory';
 import { TodoItemSchemaFactory } from './infrastructure/database/schema-factory/todoItem-schema.factory';
-import { MongooseModule, SchemaFactory } from '@nestjs/mongoose';
+import { SchemaFactory } from '@nestjs/mongoose';
 import { TodoItemEntityFactory } from './domain/entityFactory/TodoItemEntity.factory';
 import { TodoListEntityFactory } from './domain/entityFactory/TodoListEntity.factory';
 import { TodoCommandHandlers } from './application/commands';
 import { TodoEventHandlers } from './domain/events';
 import { TodoQueryHandlers } from './application/queries';
+import * as Joi from 'joi';
 
 
 
@@ -27,71 +28,66 @@ import { TodoQueryHandlers } from './application/queries';
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
+      validationSchema: Joi.object({
+        MONGO_QUERY_URI: Joi.string().required(),
+        MONGO_COMMAND_URI: Joi.string().required(),
+        HTTP_PORT: Joi.number().required(),
+      })
     }),
     CqrsModule,
-    DatabaseModule.forRoot("primary"),
-    DatabaseModule.forRoot("secondary"),
-    DatabaseModule.forFeature([        { 
-        name: TodoListSchema.name, 
+    DatabaseModule.forRootAsync('command', {
+      useFactory: async (configService: ConfigService) => ({
+        uri: configService.get<string>('MONGO_QUERY_URI'),
+      }),
+      inject: [ConfigService],
+    }),
+    DatabaseModule.forRootAsync('query', {
+      useFactory: async (configService: ConfigService) => ({
+        uri: configService.get<string>('MONGO_COMMAND_URI'),
+      }),
+      inject: [ConfigService],
+    }),
+    DatabaseModule.forFeature([       
+      { 
+        name: "queryTodoList", 
         schema: SchemaFactory.createForClass(TodoListSchema) 
       },
       { 
-        name: TodoItemSchema.name, 
+        name: "queryTodoItem", 
         schema: SchemaFactory.createForClass(TodoItemSchema) 
       }
-    ], "primary"
+    ], 
+    "query"
   ),
-  DatabaseModule.forFeature([        { 
-    name: TodoListSchema.name, 
-    schema: SchemaFactory.createForClass(TodoListSchema) 
-  },
-  { 
-    name: TodoItemSchema.name, 
-    schema: SchemaFactory.createForClass(TodoItemSchema) 
-  }
-], "secondary"
-),
-
-//     DatabaseModule.forRoot('primary'),
-//     DatabaseModule.forRoot('secondary'),
-//     DatabaseModule.forFeature([
-  //       { 
-  //           name: TodoListSchema.name, 
-  //           schema: SchemaFactory.createForClass(TodoListSchema) 
-  //       },
-  //       { 
-  //           name: TodoItemSchema.name, 
-  //           schema: SchemaFactory.createForClass(TodoItemSchema) 
-  //       }
-  //   ], "primary"
-  // ),
-//   DatabaseModule.forFeature([
-//     { 
-//         name: TodoListSchema.name, 
-//         schema: SchemaFactory.createForClass(TodoListSchema) 
-//     },
-//     { 
-//         name: TodoItemSchema.name, 
-//         schema: SchemaFactory.createForClass(TodoItemSchema) 
-//     }
-// ], "secondary"),
+  DatabaseModule.forFeature([        
+    { 
+      name: "commandTodoList", 
+      schema: SchemaFactory.createForClass(TodoListSchema) 
+    },
+    { 
+      name: "commandTodoItem", 
+      schema: SchemaFactory.createForClass(TodoItemSchema) 
+    }
+  ], 
+  "command"
+  ),
   ],
   controllers: [
-    TodoListController, 
-    TodoItemController
+    // TodoListController, 
+    // TodoItemController
 ],
   providers: [
-    { provide: 'TodoListRepository', useClass: TodoListEntityRepository },
-    { provide: 'TodoItemRepository', useClass: TodoItemEntityRepository },
-    TodoListEntityFactory,
-    TodoItemEntityFactory,
-    TodoListSchemaFactory,
-    TodoItemSchemaFactory,
-    ...TodoCommandHandlers,
-    ...TodoEventHandlers,
-    ...TodoQueryHandlers,
-    GetTodoListsHandler,
-    GetTodoItemsHandler,
+    // { provide: 'TodoListRepository', useClass: TodoListEntityRepository },
+    // { provide: 'TodoItemRepository', useClass: TodoItemEntityRepository },
+    // TodoListEntityFactory,
+    // TodoItemEntityFactory,
+    // TodoListSchemaFactory,
+    // TodoItemSchemaFactory,
+    // ...TodoCommandHandlers,
+    // ...TodoEventHandlers,
+    // ...TodoQueryHandlers,
+    // GetTodoListsHandler,
+    // GetTodoItemsHandler,
   ],
 })
 export class TodoModule {}

@@ -17,6 +17,7 @@ import { AuthService } from './application/services/auth.service';
 import { UserJwtStrategy } from './infrustructure/auth/strategies/jwt.strategy';
 import { RpcExceptionFilter } from './domain/exceptions/rpc-exception.filter';
 import { HealthController } from './presentation/controllers/health.controller';
+import * as Joi from 'joi';
 
 
 
@@ -25,6 +26,13 @@ import { HealthController } from './presentation/controllers/health.controller';
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
+      validationSchema: Joi.object({
+        HTTP_PORT: Joi.number().required(),
+        JWT_SECRET: Joi.string().required(),
+        JWT_EXPIRES_IN: Joi.string().required(),
+        REDIS_HOST: Joi.string().required(),
+        REDISE_PORT: Joi.number().required(),
+      })
     }),
     ClientsModule.register([
       {

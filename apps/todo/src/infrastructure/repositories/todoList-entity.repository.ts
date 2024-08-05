@@ -11,7 +11,7 @@ import { TodoListSchemaFactory } from "../database/schema-factory/todoList-schem
 @Injectable()
 export class TodoListEntityRepository extends BaseEntityRepository<TodoListSchema, TodoList>{
     constructor(
-        @InjectModel(TodoListSchema.name, 'primary')
+        @InjectModel("commandTodoList")
         todoListModel: Model<TodoListSchema>,
         todoListSchemaFactory: TodoListSchemaFactory
     ){
