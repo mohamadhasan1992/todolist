@@ -8,8 +8,6 @@ import { TodoListController } from './presentation/controllers/todoList.controll
 import { TodoItemController } from './presentation/controllers/todoItem.controller';
 import { GetTodoListsHandler } from './application/queries/get-todoList-query.handler';
 import { GetTodoItemsHandler } from './application/queries/get-todoItem-query.handler';
-import { TodoListEntityRepository } from './infrastructure/repositories/todoList-entity.repository';
-import { TodoItemEntityRepository } from './infrastructure/repositories/todoItem-entity.repository';
 import { TodoListSchemaFactory } from './infrastructure/database/schema-factory/todoList-schema.factory';
 import { TodoItemSchemaFactory } from './infrastructure/database/schema-factory/todoItem-schema.factory';
 import { SchemaFactory } from '@nestjs/mongoose';
@@ -19,6 +17,10 @@ import { TodoCommandHandlers } from './application/commands';
 import { TodoEventHandlers } from './domain/events';
 import { TodoQueryHandlers } from './application/queries';
 import * as Joi from 'joi';
+import { TodoListCommandEntityRepository } from './infrastructure/repositories/todoList-command-entity.repository';
+import { TodoListQueryEntityRepository } from './infrastructure/repositories/todoList-query-entity.repository';
+import { TodoItemQueryEntityRepository } from './infrastructure/repositories/todoItem-query-entity.repository';
+import { TodoItemCommandEntityRepository } from './infrastructure/repositories/todoItem-command-entity.repository';
 
 
 
@@ -77,8 +79,10 @@ import * as Joi from 'joi';
     TodoItemController
 ],
   providers: [
-    { provide: 'TodoListRepository', useClass: TodoListEntityRepository },
-    { provide: 'TodoItemRepository', useClass: TodoItemEntityRepository },
+    { provide: 'TodoListCommandRepository', useClass: TodoListCommandEntityRepository },
+    { provide: 'TodoListQueryRepository', useClass: TodoListQueryEntityRepository },
+    { provide: 'TodoItemQueryRepository', useClass: TodoItemQueryEntityRepository },
+    { provide: 'TodoItemCommandRepository', useClass: TodoItemCommandEntityRepository },
     TodoListEntityFactory,
     TodoItemEntityFactory,
     TodoListSchemaFactory,

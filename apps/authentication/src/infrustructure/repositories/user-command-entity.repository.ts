@@ -1,17 +1,17 @@
-import { BaseEntityRepository } from "@app/common/database/base-entity.repository";
 import { Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
 import { UserSchema } from "../database/schema/user.schema";
 import { User } from "../../domain/entities/user.entity";
 import { UserSchemaFactory } from "../database/schema-factory/user-schema.factory";
+import { BaseCommandEntityRepository } from "@app/common/database/command-entity.repository";
 
 
 
 @Injectable()
-export class UserEntityRepository extends BaseEntityRepository<UserSchema, User>{
+export class UserCommandEntityRepository extends BaseCommandEntityRepository<UserSchema, User>{
     constructor(
-        @InjectModel("queryUser", "query")
+        @InjectModel("commandUser", "command")
         userModel: Model<UserSchema>,
         userSchemaFactory: UserSchemaFactory
     ){

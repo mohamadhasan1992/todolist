@@ -1,7 +1,7 @@
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 import { GetMeQuery } from './get-me-query';
 import { Inject } from '@nestjs/common';
-import { IUserRepository } from '../../domain/repositories/user.repository.interface';
+import { IUserQueryRepository } from '../../domain/repositories/user.repository.interface';
 
 
 
@@ -9,11 +9,11 @@ import { IUserRepository } from '../../domain/repositories/user.repository.inter
 @QueryHandler(GetMeQuery)
 export class getMeQueryHandler implements IQueryHandler<GetMeQuery> {
   constructor(
-    @Inject("UserRepository")
-    private readonly userRepository: IUserRepository
+    @Inject("UserQueryRepository")
+    private readonly userQueryRepository: IUserQueryRepository
   ) {}
 
   async execute({userId}: GetMeQuery) {
-    return this.userRepository.findById(userId);
+    return this.userQueryRepository.findById(userId);
   }
 }

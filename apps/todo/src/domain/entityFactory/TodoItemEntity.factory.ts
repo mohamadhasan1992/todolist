@@ -3,15 +3,15 @@ import { Types } from "mongoose";
 import { TodoItem } from "../entities/todoItem.entity";
 import { Inject, Injectable } from "@nestjs/common";
 import { TodoItemCreatedEvent } from "../events/todoItem/todoItem-created.event";
-import { ITodoItemRepository } from "../repositories/todoItem.repository.interface";
+import { ITodoItemCommandRepository } from "../repositories/todoItem.repository.interface";
 
 
 
 @Injectable()
 export class TodoItemEntityFactory implements EntityFactory<TodoItem>{
     constructor(
-        @Inject("TodoItemRepository") 
-        private readonly todoItemRepository: ITodoItemRepository
+        @Inject("TodoItemCommandRepository") 
+        private readonly todoItemRepository: ITodoItemCommandRepository
     ){}
 
     async create(title: string, description: string, priority: string, todoList: string): Promise<TodoItem> {

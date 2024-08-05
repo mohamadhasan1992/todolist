@@ -2,7 +2,7 @@ import { CommandHandler, EventPublisher, ICommandHandler } from '@nestjs/cqrs';
 import { UpdateTodoListCommand } from './update-todoList.command';
 import { CommandTodoListResponse} from '@app/common';
 import { Inject } from '@nestjs/common';
-import { ITodoListRepository } from 'apps/todo/src/domain/repositories/todo.repository.interface';
+import { ITodoListCommandRepository, ITodoListQueryRepository } from 'apps/todo/src/domain/repositories/todo.repository.interface';
 
 
 
@@ -10,8 +10,10 @@ import { ITodoListRepository } from 'apps/todo/src/domain/repositories/todo.repo
 @CommandHandler(UpdateTodoListCommand)
 export class UpdateTodoListHandler implements ICommandHandler<UpdateTodoListCommand> {
   constructor(
-    @Inject("TodoListRepository")
-    private readonly todoListRepository: ITodoListRepository,
+    @Inject("TodoListCommandRepository")
+    private readonly todoListRepository: ITodoListCommandRepository,
+    @Inject("TodoListQueryRepository")
+    private readonly todoListQueryRepository: ITodoListQueryRepository,
     private readonly eventPublisher: EventPublisher
   ) {}
 
@@ -19,7 +21,7 @@ export class UpdateTodoListHandler implements ICommandHandler<UpdateTodoListComm
     const {id, label, user} = updateTodoListDto;
 
     const todoList = this.eventPublisher.mergeObjectContext(
-      await this.todoListRepository.findOneById(id)
+      await this.todoListQueryRepository.findOneById(id)
     );
     todoList.updateTodoList(label, user);
     await this.todoListRepository.findOneAndReplaceById(id, todoList)

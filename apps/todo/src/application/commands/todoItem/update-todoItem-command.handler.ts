@@ -2,7 +2,7 @@ import { CommandHandler, EventPublisher, ICommandHandler } from "@nestjs/cqrs";
 import { UpdateTodoItemCommand } from "./update-todoItem.command";
 import { CommandTodoItemResponse } from "@app/common";
 import { Inject } from "@nestjs/common";
-import { ITodoItemRepository } from "apps/todo/src/domain/repositories/todoItem.repository.interface";
+import { ITodoItemCommandRepository, ITodoItemQueryRepository } from "apps/todo/src/domain/repositories/todoItem.repository.interface";
 
 
 
@@ -10,8 +10,10 @@ import { ITodoItemRepository } from "apps/todo/src/domain/repositories/todoItem.
 @CommandHandler(UpdateTodoItemCommand)
 export class UpdateTodoItemHandler implements ICommandHandler<UpdateTodoItemCommand> {
   constructor(
-    @Inject("TodoItemRepository")
-    private readonly todoItemRepository: ITodoItemRepository,
+    @Inject("TodoItemCommandRepository")
+    private readonly todoItemRepository: ITodoItemCommandRepository,
+    @Inject("TodoItemQueryRepository")
+    private readonly todoItemQueryRepository: ITodoItemQueryRepository,
     private readonly eventPublisher: EventPublisher
   ) {}
 
@@ -20,7 +22,7 @@ export class UpdateTodoItemHandler implements ICommandHandler<UpdateTodoItemComm
 
     // Fetch the existing todo item
     const todoItem = this.eventPublisher.mergeObjectContext(
-      await this.todoItemRepository.findOneById(id),
+      await this.todoItemQueryRepository.findOneById(id),
     );
 
     // Apply the updates

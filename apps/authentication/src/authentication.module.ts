@@ -7,7 +7,6 @@ import { DatabaseModule } from '@app/common/database/database.module';
 import { UserSchema } from './infrustructure/database/schema/user.schema';
 import { SchemaFactory } from '@nestjs/mongoose';
 import { AuthController } from './presentation/controllers/auth.controller';
-import { UserEntityRepository } from './infrustructure/repositories/user-entity.repository';
 import { UserEntityFactory } from './domain/entityFactory/UserEntity.factory';
 import { AuthCommandHandlers } from './application/commands';
 import { UserSchemaFactory } from './infrustructure/database/schema-factory/user-schema.factory';
@@ -15,6 +14,8 @@ import { AuthService } from './application/services/auth.service';
 import { JwtModule } from '@nestjs/jwt';
 import { AuthQueryHandlers } from './application/queries';
 import * as Joi from 'joi';
+import { UserQueryEntityRepository } from './infrustructure/repositories/user-query-entity.repository';
+import { UserCommandEntityRepository } from './infrustructure/repositories/user-command-entity.repository';
 
 
 
@@ -75,7 +76,8 @@ import * as Joi from 'joi';
   controllers: [AuthController],
   providers: [
     AuthService,
-    {provide: "UserRepository", useClass: UserEntityRepository},
+    {provide: "UserQueryRepository", useClass: UserQueryEntityRepository},
+    {provide: "UserCommandRepository", useClass: UserCommandEntityRepository},
     UserEntityFactory,
     UserSchemaFactory,
     ...AuthCommandHandlers,

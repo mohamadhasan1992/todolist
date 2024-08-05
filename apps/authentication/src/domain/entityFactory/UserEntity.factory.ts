@@ -3,15 +3,15 @@ import { Types } from "mongoose";
 import { Inject, Injectable } from "@nestjs/common";
 import { User } from "../entities/user.entity";
 import { UserCreatedEvent } from "../events/user/user-created.event";
-import { IUserRepository } from "../repositories/user.repository.interface";
+import { IUserCommandRepository} from "../repositories/user.repository.interface";
 
 
 
 @Injectable()
 export class UserEntityFactory implements EntityFactory<User>{
     constructor(
-        @Inject("UserRepository") 
-        private readonly userRepository: IUserRepository
+        @Inject("UserCommandRepository") 
+        private readonly userRepository: IUserCommandRepository
     ){}
 
     async create(name: string, email: string, password: string): Promise<User> {

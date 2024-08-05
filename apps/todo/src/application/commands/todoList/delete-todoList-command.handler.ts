@@ -4,7 +4,7 @@ import { RpcException } from '@nestjs/microservices';
 import { TodoListDeletedEvent } from 'apps/todo/src/domain/events/todoList/todoList-deleted.event';
 import { CommandTodoListResponse } from '@app/common';
 import { Inject } from '@nestjs/common';
-import { ITodoListRepository } from 'apps/todo/src/domain/repositories/todo.repository.interface';
+import { ITodoListCommandRepository, ITodoListQueryRepository } from 'apps/todo/src/domain/repositories/todo.repository.interface';
 
 
 
@@ -12,14 +12,16 @@ import { ITodoListRepository } from 'apps/todo/src/domain/repositories/todo.repo
 @CommandHandler(DeleteTodoListCommand)
 export class DeleteTodoListHandler implements ICommandHandler<DeleteTodoListCommand> {
   constructor(
-    @Inject("TodoListRepository")
-    private readonly todoListRepository: ITodoListRepository,
+    @Inject("TodoListCommandRepository")
+    private readonly todoListRepository: ITodoListCommandRepository,
+    @Inject("TodoListQueryRepository")
+    private readonly todoListQueryRepository: ITodoListQueryRepository,
     private readonly eventPublisher: EventPublisher
   ) {}
 
   async execute({ deleteTodoListDto }: DeleteTodoListCommand): Promise<CommandTodoListResponse> {
     const { id } = deleteTodoListDto;
-    const todoList = await this.todoListRepository.findOneById(id);
+    const todoList = await this.todoListQueryRepository.findOneById(id);
     if (!todoList) {
       throw new RpcException('TodoList Not Found');
     }

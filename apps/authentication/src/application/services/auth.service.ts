@@ -5,23 +5,22 @@ import { SignUpUserResponse } from '@app/common/types/auth';
 import { RpcException } from '@nestjs/microservices';
 import { JwtService } from '@nestjs/jwt';
 import { Cache, CACHE_MANAGER } from '@nestjs/cache-manager';
-import { IUserRepository } from '../../domain/repositories/user.repository.interface';
-import { compareHash } from '@app/common';
+import { IUserCommandRepository, IUserQueryRepository} from '../../domain/repositories/user.repository.interface';
 
 
 
 @Injectable()
 export class AuthService {
   constructor(
-    @Inject("UserRepository")
-    private readonly userRepository: IUserRepository,
+    @Inject("UserQueryRepository")
+    private readonly userQueryRepository: IUserQueryRepository,
     private readonly userFactory: UserEntityFactory,
     private readonly jwtService: JwtService,
     @Inject(CACHE_MANAGER) private cacheManager: Cache
 ) {}
 
   async login(email: string, password: string): Promise<{ token: string, message: string }> {
-    const user = await this.userRepository.findByEmail(email);
+    const user = await this.userQueryRepository.findByEmail(email);
     if (user && await(user.validatePassword(password))) {
         const token = this.jwtService.sign({email: user.getEmail(), userId: user.getId()});
         // cahce user
@@ -37,6 +36,6 @@ export class AuthService {
   }
 
   async getUser(email: string): Promise<User | null> {
-    return this.userRepository.findByEmail(email);
+    return this.userQueryRepository.findByEmail(email);
   }
 }
