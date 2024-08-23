@@ -13,10 +13,10 @@ export class CreateProductHandler implements ICommandHandler<CreateProductComman
   ) {}
 
   async execute({ createProductDto }: CreateProductCommand): Promise<any> {
-    const {label, user, price} = createProductDto;
+    const {label, user, price, quantity} = createProductDto;
 
     const product = this.eventPublisher.mergeObjectContext(
-      await this.productFactory.create(label, user, price)
+      await this.productFactory.create(label, user, price, quantity)
     );
     product.commit()
     return {
@@ -24,7 +24,8 @@ export class CreateProductHandler implements ICommandHandler<CreateProductComman
       id: product.getId(),
       user: product.getUser(),
       label: product.getLabel(),
-      price: product.getPrice()
+      price: product.getPrice(),
+      quantity: product.getQuantity()
     }
   }
 }

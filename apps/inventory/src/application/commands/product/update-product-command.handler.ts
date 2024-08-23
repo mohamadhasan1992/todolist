@@ -17,12 +17,12 @@ export class UpdateProductHandler implements ICommandHandler<UpdateProductComman
   ) {}
 
   async execute({ updateProductDto, id }: UpdateProductCommand): Promise<any> {
-    const {price, label, user} = updateProductDto;
+    const {price, label, user, quantity} = updateProductDto;
 
     const product = this.eventPublisher.mergeObjectContext(
       await this.ProductQueryRepository.findOneById(id)
     );
-    product.updateProduct(label, user, price);
+    product.updateProduct(label, user, price, quantity);
     await this.ProductRepository.findOneAndReplaceById(id, product)
     product.commit()
     // find todoItems

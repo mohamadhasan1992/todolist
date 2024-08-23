@@ -28,15 +28,18 @@ message ProductItem {
     string id = 1;
     string label = 2;
     int32 price = 3;
+    int32 quantity = 4;
 }
 
 message ProductListRequest {
     string label_filter = 1; // Example filter
     int32 min_price = 2;
     int32 max_price = 3;
-    int32 page = 4;
-    int32 limit = 5;
-    string sort = 6;
+    int32 min_quantity = 4;
+    int32 max_quantity = 5;
+    int32 page = 6;
+    int32 limit = 7;
+    string sort = 8;
 }
 
 message ProductList {
@@ -48,7 +51,8 @@ message OrderItem {
     string id = 1;
     string title = 2;
     string description = 3;
-    string createdAt = 4;
+    int32 quantity = 4; 
+    string createdAt = 5;
 }
 
 message OrderListRequest {
@@ -58,6 +62,8 @@ message OrderListRequest {
     int32 page = 4;
     int32 limit = 5;
     string sort = 6;
+    string min_quantity = 7;
+    string max_quantity = 8;
 }
 
 message OrderLists {
@@ -70,10 +76,12 @@ message PaymentItem {
 }
 
 message PaymentListRequest {
-    string user_id = 1; // Example filter
-    int32 page = 2;
-    int32 limit = 3;
-    string sort = 4;
+    string min_quantity = 1;
+    string max_quantity = 2;
+    string user_id = 3; // Example filter
+    int32 page = 4;
+    int32 limit = 5;
+    string sort = 6;
 }
 
 message PaymentList {

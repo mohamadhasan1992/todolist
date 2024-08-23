@@ -3,4 +3,4 @@ import { GetProductListHandler } from "./get-productList-query.handler";
 
 
 
-export const TodoQueryHandlers = [GetProductListHandler, GetProductItemsHandler]
+export const ProductQueryHandlers = [GetProductListHandler, GetProductItemsHandler]

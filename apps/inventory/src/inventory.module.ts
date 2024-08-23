@@ -3,7 +3,7 @@ import { CqrsModule } from '@nestjs/cqrs';
 import { DatabaseModule } from '@app/common/database/database.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { SchemaFactory } from '@nestjs/mongoose';
-import { TodoQueryHandlers } from './application/queries';
+import { ProductQueryHandlers } from './application/queries';
 import * as Joi from 'joi';
 import { ProductSchema } from './infrastructure/database/schemas/product.schema';
 import { ProductController } from './presentation/controllers/product.controller';
@@ -13,6 +13,7 @@ import { ProductSchemaFactory } from './infrastructure/database/schema-factory/p
 import { GetProductListHandler } from './application/queries/get-productList-query.handler';
 import { ProductEntityFactory } from './domain/entityFactory/ProductEntity.factory';
 import { ProductEventHandlers } from './domain/events';
+import { ProductCommandHandlers } from './application/commands';
 
 
 
@@ -66,9 +67,9 @@ import { ProductEventHandlers } from './domain/events';
     { provide: 'ProductQueryRepository', useClass: ProductQueryEntityRepository },
     ProductEntityFactory,
     ProductSchemaFactory,
-    // ...TodoCommandHandlers,
+    ...ProductCommandHandlers,
     ...ProductEventHandlers,
-    ...TodoQueryHandlers,
+    ...ProductQueryHandlers,
     GetProductListHandler,
   ],
 })

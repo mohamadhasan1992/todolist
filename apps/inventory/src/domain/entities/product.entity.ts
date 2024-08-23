@@ -6,7 +6,8 @@ export class Product extends AggregateRoot{
       private readonly _id: string,
       private label: string,
       private user: string,
-      private price: number
+      private price: number,
+      private quantity: number,
     ) {
       super()
     }
@@ -27,10 +28,16 @@ export class Product extends AggregateRoot{
       return this.price;
     }
 
-    updateProduct(label: string, user: string, price: number) {
+    getQuantity(): number{
+      return this.quantity;
+    }
+
+    updateProduct(label: string, user: string, price: number, quantity: number) {
       this.user = user;
       this.label = label;
       this.price = price;
+      this.quantity = quantity;
+      
 
       return this;
     }

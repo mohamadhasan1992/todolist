@@ -14,6 +14,9 @@ export class ProductSchema extends IdentifiableEntitySchema {
 
   @Prop({required: true})
   price: number;
+
+  @Prop({default: 0})
+  quantity: number;
 }
 
 

@@ -1,6 +1,7 @@
-import { GetTodoItemsHandler } from "./get-todoItem-query.handler";
-import { GetTodoListsHandler } from "./get-todoList-query.handler";
+import { GetOnePaymentHandler } from "./get-payment-query.handler";
+import { GetPaymentListHandler } from "./get-paymentList-query.handler";
 
 
 
-export const TodoQueryHandlers = [GetTodoListsHandler, GetTodoItemsHandler]
+
+export const PaymentQueryHandlers = [GetPaymentListHandler, GetOnePaymentHandler]

@@ -30,6 +30,7 @@ export interface ProductItem {
   id: string;
   label: string;
   price: number;
+  quantity: number;
 }
 
 export interface ProductListRequest {
@@ -37,6 +38,8 @@ export interface ProductListRequest {
   labelFilter: string;
   minPrice: number;
   maxPrice: number;
+  minQuantity: number;
+  maxQuantity: number;
   page: number;
   limit: number;
   sort: string;
@@ -51,6 +54,7 @@ export interface OrderItem {
   id: string;
   title: string;
   description: string;
+  quantity: number;
   createdAt: string;
 }
 
@@ -62,6 +66,8 @@ export interface OrderListRequest {
   page: number;
   limit: number;
   sort: string;
+  minQuantity: string;
+  maxQuantity: string;
 }
 
 export interface OrderLists {
@@ -74,6 +80,8 @@ export interface PaymentItem {
 }
 
 export interface PaymentListRequest {
+  minQuantity: string;
+  maxQuantity: string;
   /** Example filter */
   userId: string;
   page: number;

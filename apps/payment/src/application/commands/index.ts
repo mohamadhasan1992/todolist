@@ -1,18 +1,11 @@
-import { CreateTodoItemHandler } from "./todoItem/create-todoItem-command.handler";
-import { DeleteTodoItemHandler } from "./todoItem/delete-todoItem-command.handler";
-import { UpdateTodoItemHandler } from "./todoItem/update-todoItem-command.handler";
-import { CreateTodoListHandler } from "./todoList/create-todoList-command.handler";
-import { DeleteTodoListHandler } from "./todoList/delete-todoList-command.handler";
-import { UpdateTodoListHandler } from "./todoList/update-todoList-command.handler";
+import { CreatePaymentHandler } from "./payment/create-payment-command.handler";
+import { DeletePaymentHandler } from "./payment/delete-payment-command.handler";
+import { UpdatePaymentHandler } from "./payment/update-payment-command.handler";
 
 
 
-export const TodoCommandHandlers = [
-    CreateTodoListHandler, 
-    CreateTodoItemHandler, 
-    UpdateTodoListHandler, 
-    DeleteTodoListHandler, 
-    CreateTodoItemHandler,
-    UpdateTodoItemHandler,
-    DeleteTodoItemHandler
+export const PaymentCommandHandlers = [
+    CreatePaymentHandler, 
+    UpdatePaymentHandler, 
+    DeletePaymentHandler, 
 ]

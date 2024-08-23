@@ -1,6 +1,6 @@
-import { GetTodoItemsHandler } from "./get-todoItem-query.handler";
-import { GetTodoListsHandler } from "./get-todoList-query.handler";
+import { GetOneOrderHandler } from "./get-order-query.handler";
+import { GetOrderListHandler } from "./get-orderList-query.handler";
 
 
 
-export const TodoQueryHandlers = [GetTodoListsHandler, GetTodoItemsHandler]
+export const OrderQueryHandlers = [GetOrderListHandler, GetOneOrderHandler]

@@ -61,44 +61,44 @@ services:
       - node_modules:/usr/src/app/node_modules
     depends_on:
       - nats-jetstream
-  # order:
-  #   container_name: order
-  #   build:
-  #     context: .
-  #     dockerfile: ./apps/order/Dockerfile
-  #     target: development
-  #   command: npm run start:dev order
-  #   env_file:
-  #     - ./apps/order/.env
-  #   ports:
-  #     - "50053:50051"
-  #   networks:
-  #     - app-network
-  #   volumes:
-  #     - .:/usr/src/app
-  #     - ./proto/:/usr/src/app/proto
-  #     - node_modules:/usr/src/app/node_modules
-  #   depends_on:
-  #     - nats-jetstream
-  # payment:
-  #   container_name: payment
-  #   build:
-  #     context: .
-  #     dockerfile: ./apps/payment/Dockerfile
-  #     target: development
-  #   command: npm run start:dev payment
-  #   env_file:
-  #     - ./apps/payment/.env
-  #   ports:
-  #     - "50054:50051"
-  #   networks:
-  #     - app-network
-  #   volumes:
-  #     - .:/usr/src/app
-  #     - ./proto/:/usr/src/app/proto
-  #     - node_modules:/usr/src/app/node_modules
-  #   depends_on:
-  #     - nats-jetstream
+  order:
+    container_name: order
+    build:
+      context: .
+      dockerfile: ./apps/order/Dockerfile
+      target: development
+    command: npm run start:dev order
+    env_file:
+      - ./apps/order/.env
+    ports:
+      - "50053:50051"
+    networks:
+      - app-network
+    volumes:
+      - .:/usr/src/app
+      - ./proto/:/usr/src/app/proto
+      - node_modules:/usr/src/app/node_modules
+    depends_on:
+      - nats-jetstream
+  payment:
+    container_name: payment
+    build:
+      context: .
+      dockerfile: ./apps/payment/Dockerfile
+      target: development
+    command: npm run start:dev payment
+    env_file:
+      - ./apps/payment/.env
+    ports:
+      - "50054:50051"
+    networks:
+      - app-network
+    volumes:
+      - .:/usr/src/app
+      - ./proto/:/usr/src/app/proto
+      - node_modules:/usr/src/app/node_modules
+    depends_on:
+      - nats-jetstream
 
 
   

@@ -1,7 +1,8 @@
-import { TodoItemCreatedHandler } from "./todoItem/todoItem-created.handler";
-import { TodoListCreatedHandler } from "./todoList/todoList-created.handler";
-import { TodoListDeletedHandler } from "./todoList/todoList-deleted.handler";
+import { PaymentCreatedEvent } from "./payment-created.event";
+import { PaymentDeletedEvent } from "./payment-deleted.event";
 
 
-
-export const TodoEventHandlers = [TodoItemCreatedHandler, TodoListCreatedHandler, TodoListDeletedHandler];
+export const PaymentEventHandlers = [
+    PaymentCreatedEvent,
+    PaymentDeletedEvent,
+];

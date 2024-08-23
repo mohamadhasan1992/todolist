@@ -1,20 +1,20 @@
 import { NestFactory } from '@nestjs/core';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { join } from 'path';
-import { InventoryModule } from './inventory.module';
 import { QUERY_PACKAGE_NAME } from '@app/common/types';
+import { OrderModule } from './order.module';
 
 
 
 
 async function bootstrap() {
   const app = await NestFactory.createMicroservice<MicroserviceOptions>(
-    InventoryModule,
+    OrderModule,
     {
       transport: Transport.GRPC,
       options:{
         url: "order:50053",
-        protoPath: join(__dirname, '../query.proto'),
+        protoPath: join(__dirname, '../../../proto/query.proto'),
         package: QUERY_PACKAGE_NAME
       } 
 

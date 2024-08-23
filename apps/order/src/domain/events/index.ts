@@ -1,7 +1,8 @@
-import { TodoItemCreatedHandler } from "./todoItem/todoItem-created.handler";
-import { TodoListCreatedHandler } from "./todoList/todoList-created.handler";
-import { TodoListDeletedHandler } from "./todoList/todoList-deleted.handler";
+import { OrderCreatedEvent } from "./order-created.event";
+import { OrderDeletedEvent } from "./order-deleted.event";
 
 
-
-export const TodoEventHandlers = [TodoItemCreatedHandler, TodoListCreatedHandler, TodoListDeletedHandler];
+export const OrderEventHandlers = [
+    OrderCreatedEvent,
+    OrderDeletedEvent,
+];

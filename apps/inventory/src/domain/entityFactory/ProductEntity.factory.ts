@@ -14,12 +14,13 @@ export class ProductEntityFactory implements EntityFactory<Product>{
         private readonly productRepository: IProductCommandRepository
     ){}
 
-    async create(label: string, user: string, price: number): Promise<Product> {
+    async create(label: string, user: string, price: number, quantity: number): Promise<Product> {
         const product = new Product(
             new Types.ObjectId().toHexString(), 
             label,
             user,
-            price
+            price,
+            quantity
         )
         await this.productRepository.create(product)
         Product.apply(

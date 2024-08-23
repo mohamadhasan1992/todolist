@@ -13,7 +13,8 @@ export class ProductSchemaFactory implements EntitySchemaFactory<ProductSchema, 
             _id: new Types.ObjectId(product.getId()),
             label: product.getLabel(),
             user: product.getUser(),
-            price: product.getPrice()
+            price: product.getPrice(),
+            quantity: product.getQuantity()
         }
     }
     createFromSchema(productSchema: ProductSchema): Product {
@@ -21,7 +22,8 @@ export class ProductSchemaFactory implements EntitySchemaFactory<ProductSchema, 
             productSchema._id.toHexString(),
             productSchema.label,
             productSchema.user,
-            productSchema.price
+            productSchema.price,
+            productSchema.quantity
         )
     }
 }

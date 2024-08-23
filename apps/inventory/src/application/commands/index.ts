@@ -4,7 +4,7 @@ import { UpdateProductHandler } from "./product/update-product-command.handler";
 
 
 
-export const TodoCommandHandlers = [
+export const ProductCommandHandlers = [
     CreateProductHandler, 
     UpdateProductHandler, 
     DeleteProductHandler, 
