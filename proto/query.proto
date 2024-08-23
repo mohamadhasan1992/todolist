@@ -1,0 +1,105 @@
+syntax = "proto3";
+
+package query;
+
+// Auth
+message LoginUserDto {
+    string email = 1;
+    string password = 2;
+}
+
+message LoginUserResponse {
+    string message = 1;
+    string token = 2;
+}
+
+message GetMeUserResponse {
+    string _id = 1;
+    string name = 2;
+    string email = 3;
+}
+
+message GetMeDto {
+    string userId = 1;
+}
+
+// Inventory
+message ProductItem {
+    string id = 1;
+    string label = 2;
+    int32 price = 3;
+}
+
+message ProductListRequest {
+    string label_filter = 1; // Example filter
+    int32 min_price = 2;
+    int32 max_price = 3;
+    int32 page = 4;
+    int32 limit = 5;
+    string sort = 6;
+}
+
+message ProductList {
+    repeated ProductItem productItems = 1;
+}
+
+// Order
+message OrderItem {
+    string id = 1;
+    string title = 2;
+    string description = 3;
+    string createdAt = 4;
+}
+
+message OrderListRequest {
+    string title_filter = 1; // Example filter
+    string date_range_start = 2;
+    string date_range_end = 3;
+    int32 page = 4;
+    int32 limit = 5;
+    string sort = 6;
+}
+
+message OrderLists {
+    repeated OrderItem orderItems = 1;
+}
+
+// Payment
+message PaymentItem {
+    string id = 1;
+}
+
+message PaymentListRequest {
+    string user_id = 1; // Example filter
+    int32 page = 2;
+    int32 limit = 3;
+    string sort = 4;
+}
+
+message PaymentList {
+    repeated PaymentItem paymentItems = 1;
+}
+
+message FindOneQuery{
+    string id = 1;
+}
+
+service AuthService {
+    rpc LoginUser(LoginUserDto) returns (LoginUserResponse) {}
+    rpc GetMe(GetMeDto) returns (GetMeUserResponse) {}
+}
+
+service InventoryService {
+    rpc FindProductList(ProductListRequest) returns (ProductList) {}
+    rpc FindOneProduct(FindOneQuery) returns (ProductItem) {}
+}
+
+service OrderService {
+    rpc FindOrderList(OrderListRequest) returns (OrderLists) {}
+    rpc FindOneOrder(FindOneQuery) returns (OrderItem) {}
+}
+
+service PaymentService {
+    rpc FindPayment(PaymentListRequest) returns (PaymentList) {}
+    rpc FindOnePayment(FindOneQuery) returns (PaymentItem) {}
+}

@@ -1,7 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { User } from '../../domain/entities/user.entity';
 import { UserEntityFactory } from '../../domain/entityFactory/UserEntity.factory';
-import { SignUpUserResponse } from '@app/common/types/auth';
 import { RpcException } from '@nestjs/microservices';
 import { JwtService } from '@nestjs/jwt';
 import { Cache, CACHE_MANAGER } from '@nestjs/cache-manager';
@@ -30,7 +29,7 @@ export class AuthService {
     throw new RpcException('Invalid credentials');
   }
 
-  async signup(name: string, email: string, password: string): Promise<SignUpUserResponse> {
+  async signup(name: string, email: string, password: string): Promise<any> {
     await this.userFactory.create(name, email, password)
     return { message: 'Registration successful' };
   }

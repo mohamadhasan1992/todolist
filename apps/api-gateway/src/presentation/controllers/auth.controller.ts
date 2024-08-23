@@ -1,8 +1,9 @@
 import { Controller, Get, Post, Body, UseGuards } from '@nestjs/common';
-import { IAuthenticatedUser, LoginUserDto, SignUpUserDto } from '@app/common';
+import { IAuthenticatedUser } from '@app/common';
 import { AuthService } from '../../application/services/auth.service';
 import { JwtAuthGuard } from '../../infrustructure/auth/guards/jwt-auth.guard';
 import { CurrentUser } from '../../infrustructure/auth/decorators/current-user.decorator';
+import { LoginUserDto } from '@app/common/types';
 
 
 
@@ -12,10 +13,10 @@ import { CurrentUser } from '../../infrustructure/auth/decorators/current-user.d
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  @Post("signup")
-  async signup(@Body() signUpUserDto: SignUpUserDto) {
-    return await this.authService.sinupUser(signUpUserDto)
-  }
+  // @Post("signup")
+  // async signup(@Body() signUpUserDto: SignUpUserDto) {
+  //   return await this.authService.sinupUser(signUpUserDto)
+  // }
 
   @Post("login")
   async login(@Body() loginUserDto: LoginUserDto) {

@@ -1,4 +1,10 @@
-import { AuthServiceController, AuthServiceControllerMethods, GetMeDto, LoginUserDto, SignUpUserDto } from '@app/common';
+import { 
+  AuthServiceController, 
+  AuthServiceControllerMethods, 
+  GetMeDto, 
+  LoginUserDto, 
+  // SignUpUserDto
+} from '@app/common';
 import { Controller } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { Payload, RpcException } from '@nestjs/microservices';
@@ -17,13 +23,13 @@ export class AuthController implements AuthServiceController {
     private readonly queryBus: QueryBus,
   ) {}
 
-  async sinUpUser(@Payload() signUpUserDto: SignUpUserDto) {
-    try{
-      return await this.commandBus.execute(new SignUpCommand(signUpUserDto ));
-    }catch(err){
-      throw new RpcException(err.message)
-    }
-  }
+  // async sinUpUser(@Payload() signUpUserDto: SignUpUserDto) {
+  //   try{
+  //     return await this.commandBus.execute(new SignUpCommand(signUpUserDto ));
+  //   }catch(err){
+  //     throw new RpcException(err.message)
+  //   }
+  // }
 
   async loginUser(
     @Payload() loginUserDto: LoginUserDto

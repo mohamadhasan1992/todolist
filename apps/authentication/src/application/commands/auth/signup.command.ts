@@ -1,4 +1,4 @@
-import { SignUpUserDto } from "@app/common";
+import { SignUpUserDto } from "../../dto/signup-user.dto";
 
 
 export class SignUpCommand {

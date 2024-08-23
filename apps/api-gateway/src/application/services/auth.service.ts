@@ -1,4 +1,8 @@
-import { AUTH_SERVICE, AUTH_SERVICE_NAME, AuthServiceClient, GetMeDto, IAuthenticatedUser, LoginUserDto, SignUpUserDto, handleError } from '@app/common';
+import { 
+  IAuthenticatedUser, 
+  handleError
+} from '@app/common';
+import { AUTH_SERVICE_NAME, AuthServiceClient, GetMeDto, LoginUserDto } from '@app/common/types';
 import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
 import { ClientGrpc } from '@nestjs/microservices';
 import { Observable } from 'rxjs';
@@ -11,7 +15,7 @@ export class AuthService implements OnModuleInit {
     private authService: AuthServiceClient
 
     constructor(
-      @Inject(AUTH_SERVICE) private client: ClientGrpc 
+      @Inject(AUTH_SERVICE_NAME) private client: ClientGrpc 
     ){}
 
     onModuleInit() {
@@ -19,9 +23,9 @@ export class AuthService implements OnModuleInit {
     }
 
 
-    async sinupUser(signUpUserDto: SignUpUserDto){
-      return await handleError(this.authService.sinUpUser(signUpUserDto))
-    } 
+    // async sinupUser(signUpUserDto: SignUpUserDto){
+    //   return await handleError(this.authService.sinUpUser(signUpUserDto))
+    // } 
 
     async loginUser(loginUserDto: LoginUserDto){
       return await handleError(this.authService.loginUser(loginUserDto))

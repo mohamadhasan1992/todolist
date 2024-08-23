@@ -6,18 +6,20 @@ import { JwtModule } from '@nestjs/jwt';
 import { APP_FILTER } from '@nestjs/core';
 import { LoggerMiddleware } from './infrustructure/middlewares/logger.middleware';
 import { ClientsModule, Transport } from '@nestjs/microservices';
-import { AUTH_PACKAGE_NAME, AUTH_SERVICE, TODO_PACKAGE_NAME, TODO_SERVICE } from '@app/common';
 import { join } from 'path';
-import { TodoItemController } from './presentation/controllers/todo-item.controller';
-import { TodoItemService } from './application/services/todo-item.service';
-import { TodolistController } from './presentation/controllers/todolist.controller';
-import { TodolistService } from './application/services/todolist.service';
 import { AuthController } from './presentation/controllers/auth.controller';
 import { AuthService } from './application/services/auth.service';
 import { UserJwtStrategy } from './infrustructure/auth/strategies/jwt.strategy';
 import { RpcExceptionFilter } from './domain/exceptions/rpc-exception.filter';
 import { HealthController } from './presentation/controllers/health.controller';
 import * as Joi from 'joi';
+import { AUTH_SERVICE_NAME, INVENTORY_SERVICE_NAME, ORDER_SERVICE_NAME, PAYMENT_SERVICE_NAME, QUERY_PACKAGE_NAME } from '@app/common/types';
+import { InventoryService } from './application/services/inventory.service';
+import { PaymentService } from './application/services/payment.service';
+import { OrderService } from './application/services/order.service';
+import { InventoryController } from './presentation/controllers/inventory.controller';
+import { PaymentController } from './presentation/controllers/payment.controller';
+import { OrderController } from './presentation/controllers/order.controller';
 
 
 
@@ -36,26 +38,51 @@ import * as Joi from 'joi';
     }),
     ClientsModule.register([
       {
-        name: TODO_SERVICE,
+        name: AUTH_SERVICE_NAME,
         transport: Transport.GRPC,
         options: {
-          url:"Todo:50052",
-          package: TODO_PACKAGE_NAME,
-          protoPath: join(__dirname, '../todo.proto'),
+          url:"authentication:50051",
+          package: QUERY_PACKAGE_NAME,
+          protoPath: join(__dirname, '../query.proto'),
         },
       } 
     ]),
     ClientsModule.register([
       {
-        name: AUTH_SERVICE,
+        name: INVENTORY_SERVICE_NAME,
         transport: Transport.GRPC,
         options: {
-          url:"authentication:50051",
-          package: AUTH_PACKAGE_NAME,
-          protoPath: join(__dirname, '../auth.proto'),
+          url:"Inventory:50052",
+          package: QUERY_PACKAGE_NAME,
+          protoPath: join(__dirname, '../query.proto'),
         },
       } 
     ]),
+
+    ClientsModule.register([
+      {
+        name: ORDER_SERVICE_NAME,
+        transport: Transport.GRPC,
+        options: {
+          url:"Order:50053",
+          package: QUERY_PACKAGE_NAME,
+          protoPath: join(__dirname, '../query.proto'),
+        },
+      } 
+    ]),
+    ClientsModule.register([
+      {
+        name: PAYMENT_SERVICE_NAME,
+        transport: Transport.GRPC,
+        options: {
+          url:"Payment:50054",
+          package: QUERY_PACKAGE_NAME,
+          protoPath: join(__dirname, '../query.proto'),
+        },
+      } 
+    ]),
+    
+    
     JwtModule.registerAsync({
       useFactory: async(configService: ConfigService) => ({
         import: [ConfigModule],
@@ -68,13 +95,15 @@ import * as Joi from 'joi';
   ],
   controllers: [
     AuthController,
-    TodolistController,
-    TodoItemController,
+    InventoryController,
+    PaymentController,
+    OrderController,
     HealthController
   ],
   providers: [
-    TodolistService,
-    TodoItemService,
+    InventoryService,
+    PaymentService,
+    OrderService,
     AuthService, 
     UserJwtStrategy,
     {
