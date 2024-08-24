@@ -22,6 +22,7 @@
   "dependencies": {
     "@grpc/grpc-js": "^1.10.6",
     "@grpc/proto-loader": "^0.7.12",
+    "@nestjs-plugins/nestjs-nats-jetstream-transport": "^2.2.6",
     "@nestjs/cache-manager": "^2.2.2",
     "@nestjs/class-validator": "^0.13.1",
     "@nestjs/common": "^9.0.0",
@@ -42,6 +43,7 @@
     "class-validator": "^0.14.1",
     "joi": "^17.13.3",
     "mongoose": "^8.3.1",
+    "nats": "^2.28.2",
     "passport-jwt": "^4.0.1",
     "pg": "^8.11.5",
     "reflect-metadata": "^0.1.13",

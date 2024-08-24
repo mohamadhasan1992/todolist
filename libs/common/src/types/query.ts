@@ -15,7 +15,11 @@ export interface LoginUserResponse {
   token: string;
 }
 
-export interface GetMeUserResponse {
+export interface FindUserByEmailDto {
+  email: string;
+}
+
+export interface User {
   Id: string;
   name: string;
   email: string;
@@ -97,23 +101,37 @@ export interface FindOneQuery {
   id: string;
 }
 
+export interface SignupUserDto {
+  email: string;
+  name: string;
+  password: string;
+}
+
+export interface SignUserResponse {
+  message: string;
+}
+
 export const QUERY_PACKAGE_NAME = "query";
 
 export interface AuthServiceClient {
   loginUser(request: LoginUserDto): Observable<LoginUserResponse>;
 
-  getMe(request: GetMeDto): Observable<GetMeUserResponse>;
+  getMe(request: GetMeDto): Observable<User>;
+
+  signUpUser(request: SignupUserDto): Observable<SignUserResponse>;
 }
 
 export interface AuthServiceController {
   loginUser(request: LoginUserDto): Promise<LoginUserResponse> | Observable<LoginUserResponse> | LoginUserResponse;
 
-  getMe(request: GetMeDto): Promise<GetMeUserResponse> | Observable<GetMeUserResponse> | GetMeUserResponse;
+  getMe(request: GetMeDto): Promise<User> | Observable<User> | User;
+
+  signUpUser(request: SignupUserDto): Promise<SignUserResponse> | Observable<SignUserResponse> | SignUserResponse;
 }
 
 export function AuthServiceControllerMethods() {
   return function (constructor: Function) {
-    const grpcMethods: string[] = ["loginUser", "getMe"];
+    const grpcMethods: string[] = ["loginUser", "getMe", "signUpUser"];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
       GrpcMethod("AuthService", method)(constructor.prototype[method], method, descriptor);

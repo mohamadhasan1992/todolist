@@ -2,10 +2,11 @@ import {
   IAuthenticatedUser, 
   handleError
 } from '@app/common';
-import { AUTH_SERVICE_NAME, AuthServiceClient, GetMeDto, LoginUserDto } from '@app/common/types';
+import { NatsJetStreamService } from '@app/common/messaging/nats-jetstream.service';
+import { AUTH_SERVICE_NAME, AuthServiceClient, GetMeDto, LoginUserDto, SignupUserDto } from '@app/common/types';
 import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
 import { ClientGrpc } from '@nestjs/microservices';
-import { Observable } from 'rxjs';
+import {  Observable } from 'rxjs';
 
 
 
@@ -15,7 +16,8 @@ export class AuthService implements OnModuleInit {
     private authService: AuthServiceClient
 
     constructor(
-      @Inject(AUTH_SERVICE_NAME) private client: ClientGrpc 
+      @Inject(AUTH_SERVICE_NAME) private client: ClientGrpc,
+      private readonly jetStreamService: NatsJetStreamService
     ){}
 
     onModuleInit() {
@@ -23,9 +25,11 @@ export class AuthService implements OnModuleInit {
     }
 
 
-    // async sinupUser(signUpUserDto: SignUpUserDto){
-    //   return await handleError(this.authService.sinUpUser(signUpUserDto))
-    // } 
+    async sinupUser(signUpUserDto: SignupUserDto){
+      console.log("signUpUserDto",signUpUserDto)
+      await this.jetStreamService.publish("authentication.command.REGISTER", signUpUserDto)
+      // return await handleError(this.authService.signUpUser(signUpUserDto))
+    } 
 
     async loginUser(loginUserDto: LoginUserDto){
       return await handleError(this.authService.loginUser(loginUserDto))

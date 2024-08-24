@@ -1,12 +1,6 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Query } from '@nestjs/common';
-import { IAuthenticatedUser } from '@app/common';
+import { Controller, Get, Param, UseGuards, Query } from '@nestjs/common';
 import { JwtAuthGuard } from '../../infrustructure/auth/guards/jwt-auth.guard';
-import { GatewayCreateTodoItemDto } from '../dto/gateway-create-todoItem.dto';
-import { CurrentUser } from '../../infrustructure/auth/decorators/current-user.decorator';
-import { GatewayUpdateTodoItemDto } from '../dto/gateway-update-todoItem.dto';
-import { InventoryService } from '../../application/services/inventory.service';
-import { OrderListRequest, PaymentListRequest } from '@app/common/types';
-import { OrderService } from '../../application/services/order.service';
+import { PaymentListRequest } from '@app/common/types';
 import { PaymentService } from '../../application/services/payment.service';
 
 

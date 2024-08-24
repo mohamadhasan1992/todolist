@@ -30,7 +30,7 @@ export abstract class EntityRepository<
     );
 
     if (!entityDocument) {
-      throw new NotFoundException('Entity was not found.');
+      return null
     }
 
     return this.entitySchemaFactory.createFromSchema(entityDocument as unknown as TSchema);

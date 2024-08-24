@@ -4,7 +4,7 @@ import { UserEntityFactory } from '../../domain/entityFactory/UserEntity.factory
 import { RpcException } from '@nestjs/microservices';
 import { JwtService } from '@nestjs/jwt';
 import { Cache, CACHE_MANAGER } from '@nestjs/cache-manager';
-import { IUserCommandRepository, IUserQueryRepository} from '../../domain/repositories/user.repository.interface';
+import { IUserQueryRepository} from '../../domain/repositories/user.repository.interface';
 
 
 

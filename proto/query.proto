@@ -13,7 +13,11 @@ message LoginUserResponse {
     string token = 2;
 }
 
-message GetMeUserResponse {
+message FindUserByEmailDto{
+    string email = 1;
+}
+
+message User {
     string _id = 1;
     string name = 2;
     string email = 3;
@@ -92,9 +96,20 @@ message FindOneQuery{
     string id = 1;
 }
 
+message SignupUserDto{
+    string email = 1;
+    string name = 2;
+    string password = 3;
+}
+
+message SignUserResponse{
+    string message = 1;
+}
+
 service AuthService {
     rpc LoginUser(LoginUserDto) returns (LoginUserResponse) {}
-    rpc GetMe(GetMeDto) returns (GetMeUserResponse) {}
+    rpc GetMe(GetMeDto) returns (User) {}
+    rpc SignUpUser(SignupUserDto) returns(SignUserResponse){}
 }
 
 service InventoryService {

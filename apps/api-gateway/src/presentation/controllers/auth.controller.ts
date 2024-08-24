@@ -1,9 +1,10 @@
-import { Controller, Get, Post, Body, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, UseGuards, BadRequestException } from '@nestjs/common';
 import { IAuthenticatedUser } from '@app/common';
 import { AuthService } from '../../application/services/auth.service';
 import { JwtAuthGuard } from '../../infrustructure/auth/guards/jwt-auth.guard';
 import { CurrentUser } from '../../infrustructure/auth/decorators/current-user.decorator';
 import { LoginUserDto } from '@app/common/types';
+import { SignUpUserDto } from '../dto/signup-user.dto';
 
 
 
@@ -11,12 +12,15 @@ import { LoginUserDto } from '@app/common/types';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(
+    private readonly authService: AuthService,
+  ) {}
 
-  // @Post("signup")
-  // async signup(@Body() signUpUserDto: SignUpUserDto) {
-  //   return await this.authService.sinupUser(signUpUserDto)
-  // }
+  @Post("signup")
+  async signup(@Body() signUpUserDto: SignUpUserDto) {
+    // find user by email
+    return await this.authService.sinupUser(signUpUserDto)
+  }
 
   @Post("login")
   async login(@Body() loginUserDto: LoginUserDto) {

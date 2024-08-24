@@ -20,7 +20,7 @@ services:
       - ./proto/:/usr/src/app/proto
       - node_modules:/usr/src/app/node_modules
     depends_on:
-      - nats-jetstream
+      - nats
       - redis
 
   authentication:
@@ -41,64 +41,64 @@ services:
       - ./proto/:/usr/src/app/proto
       - node_modules:/usr/src/app/node_modules
     depends_on:
-      - nats-jetstream
-  inventory:
-    container_name: inventory
-    build:
-      context: .
-      dockerfile: ./apps/inventory/Dockerfile
-      target: development
-    command: npm run start:dev inventory
-    env_file:
-      - ./apps/inventory/.env
-    ports:
-      - "50052:50051"
-    networks:
-      - app-network
-    volumes:
-      - .:/usr/src/app
-      - ./proto/:/usr/src/app/proto
-      - node_modules:/usr/src/app/node_modules
-    depends_on:
-      - nats-jetstream
-  order:
-    container_name: order
-    build:
-      context: .
-      dockerfile: ./apps/order/Dockerfile
-      target: development
-    command: npm run start:dev order
-    env_file:
-      - ./apps/order/.env
-    ports:
-      - "50053:50051"
-    networks:
-      - app-network
-    volumes:
-      - .:/usr/src/app
-      - ./proto/:/usr/src/app/proto
-      - node_modules:/usr/src/app/node_modules
-    depends_on:
-      - nats-jetstream
-  payment:
-    container_name: payment
-    build:
-      context: .
-      dockerfile: ./apps/payment/Dockerfile
-      target: development
-    command: npm run start:dev payment
-    env_file:
-      - ./apps/payment/.env
-    ports:
-      - "50054:50051"
-    networks:
-      - app-network
-    volumes:
-      - .:/usr/src/app
-      - ./proto/:/usr/src/app/proto
-      - node_modules:/usr/src/app/node_modules
-    depends_on:
-      - nats-jetstream
+      - nats
+  # inventory:
+  #   container_name: inventory
+  #   build:
+  #     context: .
+  #     dockerfile: ./apps/inventory/Dockerfile
+  #     target: development
+  #   command: npm run start:dev inventory
+  #   env_file:
+  #     - ./apps/inventory/.env
+  #   ports:
+  #     - "50052:50051"
+  #   networks:
+  #     - app-network
+  #   volumes:
+  #     - .:/usr/src/app
+  #     - ./proto/:/usr/src/app/proto
+  #     - node_modules:/usr/src/app/node_modules
+  #   depends_on:
+  #     - nats
+  # order:
+  #   container_name: order
+  #   build:
+  #     context: .
+  #     dockerfile: ./apps/order/Dockerfile
+  #     target: development
+  #   command: npm run start:dev order
+  #   env_file:
+  #     - ./apps/order/.env
+  #   ports:
+  #     - "50053:50051"
+  #   networks:
+  #     - app-network
+  #   volumes:
+  #     - .:/usr/src/app
+  #     - ./proto/:/usr/src/app/proto
+  #     - node_modules:/usr/src/app/node_modules
+  #   depends_on:
+  #     - nats
+  # payment:
+  #   container_name: payment
+  #   build:
+  #     context: .
+  #     dockerfile: ./apps/payment/Dockerfile
+  #     target: development
+  #   command: npm run start:dev payment
+  #   env_file:
+  #     - ./apps/payment/.env
+  #   ports:
+  #     - "50054:50051"
+  #   networks:
+  #     - app-network
+  #   volumes:
+  #     - .:/usr/src/app
+  #     - ./proto/:/usr/src/app/proto
+  #     - node_modules:/usr/src/app/node_modules
+  #   depends_on:
+  #     - nats
 
 
   
@@ -115,12 +115,18 @@ services:
   #     POSTGRES_PASSWORD: hasan
   #   volumes:
   #     - "postgres_data:/var/lib/postgresql/data"
-  nats-jetstream:
+  nats:
     image: nats
     ports:
-      - "4222:4222"   # NATS client port
-      - "8222:8222"   # Monitoring port
-    command: ["-js"]
+      - "4222:4222"  # NATS client connections
+      - "6222:6222"  # NATS cluster communication (optional)
+      - "8222:8222"  # NATS monitoring (optional)
+    command: ["-js"]  # Enables JetStream
+    environment:
+      - NATS_MAX_MEMORY=512Mb
+      - NATS_MAX_STORAGE=1Gb
+    volumes:
+      - ./nats_data:/data
     networks:
       - app-network
   primary:

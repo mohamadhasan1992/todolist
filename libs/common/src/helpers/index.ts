@@ -19,6 +19,7 @@ export const compareHash = async(data: string, hashedData: string) => {
 export const handleError = (observable) => {
     return observable.pipe(
       catchError(error => throwError(() => {
+        console.log("error", error)
         throw new RpcException(error.message);
       }))
     );

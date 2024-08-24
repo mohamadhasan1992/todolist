@@ -20,6 +20,7 @@ import { OrderService } from './application/services/order.service';
 import { InventoryController } from './presentation/controllers/inventory.controller';
 import { PaymentController } from './presentation/controllers/payment.controller';
 import { OrderController } from './presentation/controllers/order.controller';
+import { NatsJetStreamModule } from '@app/common/messaging/nats-jetstream.module';
 
 
 
@@ -34,8 +35,11 @@ import { OrderController } from './presentation/controllers/order.controller';
         JWT_EXPIRES_IN: Joi.string().required(),
         REDIS_HOST: Joi.string().required(),
         REDISE_PORT: Joi.number().required(),
+        NATS_SERVER_URL: Joi.string().required(),
+        NATS_QUEUE_NAME: Joi.string().required()
       })
     }),
+    NatsJetStreamModule.register(["authentication"]),
     ClientsModule.register([
       {
         name: AUTH_SERVICE_NAME,

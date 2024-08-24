@@ -1,16 +1,20 @@
 import { 
   AuthServiceController, 
   AuthServiceControllerMethods, 
+  FindUserByEmailDto, 
   GetMeDto, 
-  LoginUserDto, 
+  LoginUserDto,
+  LoginUserResponse, 
   // SignUpUserDto
 } from '@app/common';
 import { Controller } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { Payload, RpcException } from '@nestjs/microservices';
-import { SignUpCommand } from '../../application/commands/auth/signup.command';
 import { LoginCommand } from '../../application/commands/auth/login.command';
 import { GetMeQuery } from '../../application/queries/get-me-query';
+import { GetUserByEmailQuery } from '../../application/queries/get-user-by-email-query';
+import { SignUpUserDto } from '../../application/dto/signup-user.dto';
+import { SignUpCommand } from '../../application/commands/auth/signup.command';
 
 
 
@@ -23,17 +27,24 @@ export class AuthController implements AuthServiceController {
     private readonly queryBus: QueryBus,
   ) {}
 
-  // async sinUpUser(@Payload() signUpUserDto: SignUpUserDto) {
-  //   try{
-  //     return await this.commandBus.execute(new SignUpCommand(signUpUserDto ));
-  //   }catch(err){
-  //     throw new RpcException(err.message)
-  //   }
-  // }
+  async findUserByEmail(@Payload() {email}: FindUserByEmailDto) {
+    try{
+      console.log("findUserByEmail", email)
+      return await this.queryBus.execute(new GetUserByEmailQuery(email));
+    }catch(err){
+      throw new RpcException(err.message)
+    }
+  }
+
+  async signUpUser(
+    @Payload() signupUserDto: SignUpUserDto
+  ){
+    return await this.commandBus.execute(new SignUpCommand(signupUserDto))
+  }
 
   async loginUser(
     @Payload() loginUserDto: LoginUserDto
-  ) {
+  ): Promise<LoginUserResponse>{
     return await this.commandBus.execute(new LoginCommand(loginUserDto ));
   }
 

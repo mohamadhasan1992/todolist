@@ -16,6 +16,7 @@ import { AuthQueryHandlers } from './application/queries';
 import * as Joi from 'joi';
 import { UserQueryEntityRepository } from './infrustructure/repositories/user-query-entity.repository';
 import { UserCommandEntityRepository } from './infrustructure/repositories/user-command-entity.repository';
+import { NatsJetStreamModule } from '@app/common/messaging/nats-jetstream.module';
 
 
 
@@ -34,6 +35,7 @@ import { UserCommandEntityRepository } from './infrustructure/repositories/user-
         MONGO_COMMAND_URI: Joi.string().required(),
       })
     }),
+    NatsJetStreamModule.register(["authentication"]),
     JwtModule.registerAsync({
       useFactory: async(configService: ConfigService) => ({
         import: [ConfigModule],
