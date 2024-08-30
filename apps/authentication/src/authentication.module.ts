@@ -16,7 +16,9 @@ import { AuthQueryHandlers } from './application/queries';
 import * as Joi from 'joi';
 import { UserQueryEntityRepository } from './infrustructure/repositories/user-query-entity.repository';
 import { UserCommandEntityRepository } from './infrustructure/repositories/user-command-entity.repository';
-import { NatsJetStreamModule } from '@app/common/messaging/nats-jetstream.module';
+import { KafkaModule } from '@app/common/messaging/kfaka-streaming.module';
+import { KafkaService } from '@app/common/messaging/kafka-streaming.service';
+import { KafkaTopics } from '@app/common';
 
 
 
@@ -35,7 +37,10 @@ import { NatsJetStreamModule } from '@app/common/messaging/nats-jetstream.module
         MONGO_COMMAND_URI: Joi.string().required(),
       })
     }),
-    NatsJetStreamModule.register(["authentication"]),
+    KafkaModule.forRoot({
+      clientId: 'auth-service',
+      brokers: ['kafka:9092'],
+    }),
     JwtModule.registerAsync({
       useFactory: async(configService: ConfigService) => ({
         import: [ConfigModule],
@@ -87,4 +92,27 @@ import { NatsJetStreamModule } from '@app/common/messaging/nats-jetstream.module
 
   ]
 })
-export class AuthenticationModule {}
+export class AuthenticationModule {
+
+  constructor(private readonly kafkaService: KafkaService, private readonly authService: AuthService) {}
+
+  async onModuleInit() {
+    await this.kafkaService.createConsumer('auth-group', KafkaTopics.KafkaAuthenticationRequestTopic, async (payload) => {
+      const { value } = payload.message;
+      const data = JSON.parse(value.toString());
+      const {
+        name,
+        email,
+        password
+      } = data;
+      const result = await this.authService.signup(
+        name,
+        email,
+        password
+      );
+
+      // Send the response back
+      await this.kafkaService.sendMessage('auth-responses', [result]);
+    });
+  }
+}

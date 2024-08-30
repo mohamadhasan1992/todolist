@@ -4,3 +4,13 @@ export enum Priority {
     MEDIUM = 1,
     HIGH = 2
 }
+
+
+
+
+
+export enum KafkaTopics{
+    KafkaAuthenticationRequestTopic = "auth.request",   
+    KafkaAuthenticationResponseTopic = "auth.response",   
+}
+

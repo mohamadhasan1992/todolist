@@ -26,7 +26,7 @@ export class DeleteOrderHandler implements ICommandHandler<DeleteOrderCommand> {
     }
 
     const OrderContext = this.eventPublisher.mergeObjectContext(Order);
-    await this.orderRepository.delete(id);
+    await this.orderRepository.findOneByIdAndDelete(id, OrderContext);
     OrderContext.apply(new OrderDeletedEvent(id));
     OrderContext.commit();
 

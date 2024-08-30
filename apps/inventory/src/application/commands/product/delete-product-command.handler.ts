@@ -26,7 +26,7 @@ export class DeleteProductHandler implements ICommandHandler<DeleteProductComman
     }
 
     const ProductContext = this.eventPublisher.mergeObjectContext(product);
-    await this.ProductRepository.delete(id);
+    await this.ProductRepository.findOneByIdAndDelete(id, ProductContext);
     ProductContext.apply(new ProductDeletedEvent(id));
     ProductContext.commit();
 

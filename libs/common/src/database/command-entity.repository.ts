@@ -17,7 +17,10 @@ export abstract class BaseCommandEntityRepository<
     );
   }
 
-  async delete(entityFilterQuery: FilterQuery<TSchema>): Promise<void> {
-    await this.entityModel.findOneAndDelete(entityFilterQuery).exec();
+  async findOneByIdAndDelete(_id: string, entity: TEntity): Promise<void> {
+    await this.delete(
+      { _id: new Types.ObjectId(_id) } as FilterQuery<TSchema>,
+      entity
+    );
   }
 }

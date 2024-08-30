@@ -6,7 +6,7 @@ import { Product } from "../entities/product.entity";
 export interface IProductCommandRepository {
   create(TodoList): Promise<Product>,
   save(todo: Product): Promise<Product>;
-  delete(id: string): Promise<void>;
+  findOneByIdAndDelete(id: string, entity: Product): Promise<void>;
   findOneAndReplaceById(id: string, entity: Product): Promise<void>
 }
 

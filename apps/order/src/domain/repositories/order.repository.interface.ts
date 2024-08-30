@@ -6,7 +6,7 @@ import { Order } from "../entities/order.entity";
 export interface IOrderCommandRepository {
   create(order): Promise<Order>,
   save(order: Order): Promise<Order>;
-  delete(id: string): Promise<void>;
+  findOneByIdAndDelete(id: string, entity: Order): Promise<void>;
   findOneAndReplaceById(id: string, entity: Order): Promise<void>
 }
 

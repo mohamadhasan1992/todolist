@@ -2,11 +2,11 @@ import {
   IAuthenticatedUser, 
   handleError
 } from '@app/common';
-import { NatsJetStreamService } from '@app/common/messaging/nats-jetstream.service';
 import { AUTH_SERVICE_NAME, AuthServiceClient, GetMeDto, LoginUserDto, SignupUserDto } from '@app/common/types';
 import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
 import { ClientGrpc } from '@nestjs/microservices';
 import {  Observable } from 'rxjs';
+import { ApiGatewayKafkaService } from '../../infrustructure/messaging/api-gateway-kafka.service';
 
 
 
@@ -17,7 +17,7 @@ export class AuthService implements OnModuleInit {
 
     constructor(
       @Inject(AUTH_SERVICE_NAME) private client: ClientGrpc,
-      private readonly jetStreamService: NatsJetStreamService
+      private readonly kafkaService: ApiGatewayKafkaService
     ){}
 
     onModuleInit() {
@@ -27,8 +27,11 @@ export class AuthService implements OnModuleInit {
 
     async sinupUser(signUpUserDto: SignupUserDto){
       console.log("signUpUserDto",signUpUserDto)
-      await this.jetStreamService.publish("authentication.command.REGISTER", signUpUserDto)
-      // return await handleError(this.authService.signUpUser(signUpUserDto))
+      const response = await this.kafkaService.sendRequestToAuthService(
+        signUpUserDto
+      );      
+      console.log(response)
+      return response
     } 
 
     async loginUser(loginUserDto: LoginUserDto){
@@ -39,5 +42,6 @@ export class AuthService implements OnModuleInit {
     async getMe(getMeDto: GetMeDto): Promise<Observable<IAuthenticatedUser>>{
       return await handleError(this.authService.getMe(getMeDto));
     }
+
 
 }

@@ -12,10 +12,6 @@ export abstract class BaseQueryEntityRepository<
     return this.findOne({ _id: new Types.ObjectId(id) } as FilterQuery<TSchema>);
   }
 
-  async findOne(filterQuery: FilterQuery<TSchema>): Promise<TEntity>{
-    return super.findOne(filterQuery);
-  }
-
   async findAll(filterQuery: FilterQuery<TSchema>): Promise<TEntity[]> {
     return this.find(filterQuery);
   }

@@ -6,7 +6,7 @@ import { Payment } from "../entities/payment.entity";
 export interface IPaymentCommandRepository {
   create(payment): Promise<Payment>,
   save(payment: Payment): Promise<Payment>;
-  delete(id: string): Promise<void>;
+  findOneByIdAndDelete(id: string, entity: Payment): Promise<void>;
   findOneAndReplaceById(id: string, entity: Payment): Promise<void>
 }
 

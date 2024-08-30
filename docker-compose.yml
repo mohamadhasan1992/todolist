@@ -20,7 +20,7 @@ services:
       - ./proto/:/usr/src/app/proto
       - node_modules:/usr/src/app/node_modules
     depends_on:
-      - nats
+      - kafka
       - redis
 
   authentication:
@@ -41,7 +41,7 @@ services:
       - ./proto/:/usr/src/app/proto
       - node_modules:/usr/src/app/node_modules
     depends_on:
-      - nats
+      - kafka
   # inventory:
   #   container_name: inventory
   #   build:
@@ -115,18 +115,24 @@ services:
   #     POSTGRES_PASSWORD: hasan
   #   volumes:
   #     - "postgres_data:/var/lib/postgresql/data"
-  nats:
-    image: nats
+  zookeeper:
+    image: wurstmeister/zookeeper:3.4.6
     ports:
-      - "4222:4222"  # NATS client connections
-      - "6222:6222"  # NATS cluster communication (optional)
-      - "8222:8222"  # NATS monitoring (optional)
-    command: ["-js"]  # Enables JetStream
+      - "2181:2181"
+    networks:
+      - app-network
+
+  kafka:
+    image: wurstmeister/kafka:2.13-2.7.0
+    ports:
+      - "9092:9092"
     environment:
-      - NATS_MAX_MEMORY=512Mb
-      - NATS_MAX_STORAGE=1Gb
-    volumes:
-      - ./nats_data:/data
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    depends_on:
+      - zookeeper
     networks:
       - app-network
   primary:

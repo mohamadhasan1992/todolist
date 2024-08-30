@@ -20,7 +20,8 @@ import { OrderService } from './application/services/order.service';
 import { InventoryController } from './presentation/controllers/inventory.controller';
 import { PaymentController } from './presentation/controllers/payment.controller';
 import { OrderController } from './presentation/controllers/order.controller';
-import { NatsJetStreamModule } from '@app/common/messaging/nats-jetstream.module';
+import { KafkaModule } from '@app/common/messaging/kfaka-streaming.module';
+import { ApiGatewayKafkaService } from './infrustructure/messaging/api-gateway-kafka.service';
 
 
 
@@ -39,8 +40,11 @@ import { NatsJetStreamModule } from '@app/common/messaging/nats-jetstream.module
         NATS_QUEUE_NAME: Joi.string().required()
       })
     }),
-    NatsJetStreamModule.register(["authentication"]),
-    ClientsModule.register([
+    KafkaModule.forRoot({
+      clientId: 'api-gateway',
+      brokers: ['kafka:9092'],
+    })
+    ,ClientsModule.register([
       {
         name: AUTH_SERVICE_NAME,
         transport: Transport.GRPC,
@@ -105,6 +109,7 @@ import { NatsJetStreamModule } from '@app/common/messaging/nats-jetstream.module
     HealthController
   ],
   providers: [
+    ApiGatewayKafkaService,
     InventoryService,
     PaymentService,
     OrderService,

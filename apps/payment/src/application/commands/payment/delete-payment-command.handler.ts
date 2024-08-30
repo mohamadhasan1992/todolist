@@ -26,7 +26,7 @@ export class DeletePaymentHandler implements ICommandHandler<DeletePaymentComman
     }
 
     const PaymentContext = this.eventPublisher.mergeObjectContext(Payment);
-    await this.paymentRepository.delete(id);
+    await this.paymentRepository.findOneByIdAndDelete(id, PaymentContext);
     PaymentContext.apply(new PaymentDeletedEvent(id));
     PaymentContext.commit();
 
