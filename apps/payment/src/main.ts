@@ -1,8 +1,8 @@
 import { NestFactory } from '@nestjs/core';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { join } from 'path';
-import { QUERY_PACKAGE_NAME } from '@app/common/types';
 import { PaymentModule } from './payment.module';
+import { PAYMENT_PACKAGE_NAME } from '@app/common';
 
 
 
@@ -14,8 +14,8 @@ async function bootstrap() {
       transport: Transport.GRPC,
       options:{
         url: "payment:50054",
-        protoPath: join(__dirname, '../query.proto'),
-        package: QUERY_PACKAGE_NAME
+        protoPath: join(__dirname, '../payment.proto'),
+        package: PAYMENT_PACKAGE_NAME
       } 
 
     }

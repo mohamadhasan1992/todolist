@@ -1,7 +1,7 @@
 import { 
   handleError
 } from '@app/common';
-import { ORDER_SERVICE_NAME, PAYMENT_SERVICE_NAME, PaymentListRequest, PaymentServiceClient } from '@app/common/types';
+import { PAYMENT_SERVICE_NAME, PaymentListRequest, PaymentServiceClient } from '@app/common/types';
 import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
 import { ClientGrpc } from '@nestjs/microservices';
 
@@ -13,7 +13,7 @@ export class PaymentService implements OnModuleInit {
   private paymentService: PaymentServiceClient;
 
   constructor(
-    @Inject(ORDER_SERVICE_NAME) private client: ClientGrpc 
+    @Inject(PAYMENT_SERVICE_NAME) private client: ClientGrpc 
   ){}
 
   onModuleInit() {

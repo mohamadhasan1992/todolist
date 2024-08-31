@@ -1,8 +1,8 @@
 import { NestFactory } from '@nestjs/core';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { join } from 'path';
-import { QUERY_PACKAGE_NAME } from '@app/common/types';
 import { OrderModule } from './order.module';
+import { ORDER_PACKAGE_NAME } from '@app/common';
 
 
 
@@ -14,8 +14,8 @@ async function bootstrap() {
       transport: Transport.GRPC,
       options:{
         url: "order:50053",
-        protoPath: join(__dirname, '../query.proto'),
-        package: QUERY_PACKAGE_NAME
+        protoPath: join(__dirname, '../order.proto'),
+        package: ORDER_PACKAGE_NAME
       } 
 
     }

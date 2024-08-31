@@ -4,20 +4,23 @@ import { Injectable } from '@nestjs/common';
 import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
-export class ApiGatewayKafkaService {
+export class ApiGatewayAuthKafkaService {
   private pendingResponses: Map<string, any> = new Map();
 
   constructor(private readonly kafkaService: KafkaService) {
     // Initialize response listener
-    this.kafkaService.createConsumer('api-gateway-group', KafkaTopics.KafkaAuthenticationResponseTopic, async (payload) => {
-      const { value } = payload.message;
-      const response = JSON.parse(value.toString());
-      const correlationId = response.correlationId;
-      if (this.pendingResponses.has(correlationId)) {
-        this.pendingResponses.get(correlationId).resolve(response);
-        this.pendingResponses.delete(correlationId);
-      }
-    });
+    this.kafkaService.createConsumer(
+      'api-gateway-group', 
+      KafkaTopics.KafkaAuthenticationResponseTopic, 
+      async (payload) => {
+        const { value } = payload.message;
+        const response = JSON.parse(value.toString());
+        const correlationId = response.correlationId;
+        if (this.pendingResponses.has(correlationId)) {
+          this.pendingResponses.get(correlationId).resolve(response);
+          this.pendingResponses.delete(correlationId);
+        }
+      });
   }
 
   async sendRequestToAuthService(data: any): Promise<any> {

@@ -42,63 +42,63 @@ services:
       - node_modules:/usr/src/app/node_modules
     depends_on:
       - kafka
-  # inventory:
-  #   container_name: inventory
-  #   build:
-  #     context: .
-  #     dockerfile: ./apps/inventory/Dockerfile
-  #     target: development
-  #   command: npm run start:dev inventory
-  #   env_file:
-  #     - ./apps/inventory/.env
-  #   ports:
-  #     - "50052:50051"
-  #   networks:
-  #     - app-network
-  #   volumes:
-  #     - .:/usr/src/app
-  #     - ./proto/:/usr/src/app/proto
-  #     - node_modules:/usr/src/app/node_modules
-  #   depends_on:
-  #     - nats
-  # order:
-  #   container_name: order
-  #   build:
-  #     context: .
-  #     dockerfile: ./apps/order/Dockerfile
-  #     target: development
-  #   command: npm run start:dev order
-  #   env_file:
-  #     - ./apps/order/.env
-  #   ports:
-  #     - "50053:50051"
-  #   networks:
-  #     - app-network
-  #   volumes:
-  #     - .:/usr/src/app
-  #     - ./proto/:/usr/src/app/proto
-  #     - node_modules:/usr/src/app/node_modules
-  #   depends_on:
-  #     - nats
-  # payment:
-  #   container_name: payment
-  #   build:
-  #     context: .
-  #     dockerfile: ./apps/payment/Dockerfile
-  #     target: development
-  #   command: npm run start:dev payment
-  #   env_file:
-  #     - ./apps/payment/.env
-  #   ports:
-  #     - "50054:50051"
-  #   networks:
-  #     - app-network
-  #   volumes:
-  #     - .:/usr/src/app
-  #     - ./proto/:/usr/src/app/proto
-  #     - node_modules:/usr/src/app/node_modules
-  #   depends_on:
-  #     - nats
+  inventory:
+    container_name: inventory
+    build:
+      context: .
+      dockerfile: ./apps/inventory/Dockerfile
+      target: development
+    command: npm run start:dev inventory
+    env_file:
+      - ./apps/inventory/.env
+    ports:
+      - "50052:50051"
+    networks:
+      - app-network
+    volumes:
+      - .:/usr/src/app
+      - ./proto/:/usr/src/app/proto
+      - node_modules:/usr/src/app/node_modules
+    depends_on:
+      - kafka
+  order:
+    container_name: order
+    build:
+      context: .
+      dockerfile: ./apps/order/Dockerfile
+      target: development
+    command: npm run start:dev order
+    env_file:
+      - ./apps/order/.env
+    ports:
+      - "50053:50051"
+    networks:
+      - app-network
+    volumes:
+      - .:/usr/src/app
+      - ./proto/:/usr/src/app/proto
+      - node_modules:/usr/src/app/node_modules
+    depends_on:
+      - kafka
+  payment:
+    container_name: payment
+    build:
+      context: .
+      dockerfile: ./apps/payment/Dockerfile
+      target: development
+    command: npm run start:dev payment
+    env_file:
+      - ./apps/payment/.env
+    ports:
+      - "50054:50051"
+    networks:
+      - app-network
+    volumes:
+      - .:/usr/src/app
+      - ./proto/:/usr/src/app/proto
+      - node_modules:/usr/src/app/node_modules
+    depends_on:
+      - kafka
 
 
   

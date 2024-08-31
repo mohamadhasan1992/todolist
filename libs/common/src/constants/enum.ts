@@ -11,9 +11,17 @@ export enum AuthActionsEnum{
 }
 
 
+export enum InventoryActionEnum{
+    CreateProduct,
+    UpdateProduct,
+    DeleteProduct
+}
+
 
 export enum KafkaTopics{
     KafkaAuthenticationRequestTopic = "auth.request",   
     KafkaAuthenticationResponseTopic = "auth.response",   
+    KafkaInventoryRequestTopic = "inventory.request",   
+    KafkaInventoryResponseTopic = "inventory.response",   
 }
 

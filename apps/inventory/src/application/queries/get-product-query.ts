@@ -1,8 +1,8 @@
-import { FindOneQuery } from "@app/common";
+import { FindOneProductByIdQuery } from "@app/common";
 
 
 export class GetProductQuery {
     constructor(
-        public findProductById: FindOneQuery
+        public findProductById: FindOneProductByIdQuery
     ){}
 }

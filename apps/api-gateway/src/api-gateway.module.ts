@@ -21,7 +21,8 @@ import { InventoryController } from './presentation/controllers/inventory.contro
 import { PaymentController } from './presentation/controllers/payment.controller';
 import { OrderController } from './presentation/controllers/order.controller';
 import { KafkaModule } from '@app/common/messaging/kfaka-streaming.module';
-import { ApiGatewayKafkaService } from './infrustructure/messaging/api-gateway-kafka.service';
+import { ApiGatewayAuthKafkaService } from './infrustructure/messaging/gateway-auth-kafka.service';
+import { ApiGatewayInventoryKafkaService } from './infrustructure/messaging/gateway-inventory-kafka.service';
 
 
 
@@ -78,17 +79,17 @@ import { ApiGatewayKafkaService } from './infrustructure/messaging/api-gateway-k
         },
       } 
     ]),
-    // ClientsModule.register([
-    //   {
-    //     name: PAYMENT_SERVICE_NAME,
-    //     transport: Transport.GRPC,
-    //     options: {
-    //       url:"Payment:50054",
-    //       package: PAYMENT_PACKAGE_NAME,
-    //       protoPath: join(__dirname, '../payment.proto'),
-    //     },
-    //   } 
-    // ]),
+    ClientsModule.register([
+      {
+        name: PAYMENT_SERVICE_NAME,
+        transport: Transport.GRPC,
+        options: {
+          url:"Payment:50054",
+          package: PAYMENT_PACKAGE_NAME,
+          protoPath: join(__dirname, '../payment.proto'),
+        },
+      } 
+    ]),
     
     
     JwtModule.registerAsync({
@@ -104,14 +105,15 @@ import { ApiGatewayKafkaService } from './infrustructure/messaging/api-gateway-k
   controllers: [
     AuthController,
     InventoryController,
-    // PaymentController,
+    PaymentController,
     OrderController,
     HealthController
   ],
   providers: [
-    ApiGatewayKafkaService,
+    ApiGatewayAuthKafkaService,
+    ApiGatewayInventoryKafkaService,
     InventoryService,
-    // PaymentService,
+    PaymentService,
     OrderService,
     AuthService, 
     UserJwtStrategy,

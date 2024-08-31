@@ -7,9 +7,9 @@ import { AUTH_SERVICE_NAME, AuthServiceClient, GetMeDto } from '@app/common/type
 import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
 import { ClientGrpc } from '@nestjs/microservices';
 import {  Observable } from 'rxjs';
-import { ApiGatewayKafkaService } from '../../infrustructure/messaging/api-gateway-kafka.service';
 import { SignUpUserDto } from '../../presentation/dto/signup-user.dto';
 import { LoginUserDto } from 'apps/authentication/src/application/dto/login-user.dto';
+import { ApiGatewayAuthKafkaService } from '../../infrustructure/messaging/gateway-auth-kafka.service';
 
 
 
@@ -20,7 +20,7 @@ export class AuthService implements OnModuleInit {
 
     constructor(
       @Inject(AUTH_SERVICE_NAME) private client: ClientGrpc,
-      private readonly kafkaService: ApiGatewayKafkaService
+      private readonly kafkaService: ApiGatewayAuthKafkaService
     ){}
 
     onModuleInit() {

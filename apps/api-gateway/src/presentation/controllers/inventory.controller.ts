@@ -1,7 +1,11 @@
-import { Controller, Get, Param, UseGuards, Query } from '@nestjs/common';
+import { Controller, Get, Param, UseGuards, Query, Post, Body, Patch, Delete } from '@nestjs/common';
 import { JwtAuthGuard } from '../../infrustructure/auth/guards/jwt-auth.guard';
 import { InventoryService } from '../../application/services/inventory.service';
 import { ProductListRequest } from '@app/common/types';
+import { CurrentUser } from '../../infrustructure/auth/decorators/current-user.decorator';
+import { IAuthenticatedUser } from '@app/common';
+import { CreateProductDto } from '@apps/inventory/application/dto/product/CreateProduct.dto';
+import { UpdateProductDto } from '@apps/inventory/application/dto/product/Updateproduct.dto';
 
 
 
@@ -25,47 +29,29 @@ export class InventoryController {
     return await this.inventoryService.findOne(todoListId)
   }
 
-  // @Post()
-  // async create(
-  //   @Body() createTodoItemDto: GatewayCreateTodoItemDto,
-  //   @CurrentUser() user: IAuthenticatedUser
-  // ) {
-  //   const {description, priority, title, todoList} = createTodoItemDto;
-  //   return await this.inventoryService.create({
-  //     description, 
-  //     priority, 
-  //     title,
-  //     todoList,
-  //     user: user._id
-  //   });
-  // }
+  @Post()
+  async create(
+    @Body() createProductDto: CreateProductDto,
+    @CurrentUser() user: IAuthenticatedUser
+  ) {
+    return await this.inventoryService.create(createProductDto, user._id);
+  }
 
-  // @Patch(':id')
-  // async update(
-  //   @Param('id') id: string, 
-  //   @Body() updateTodoItemDto: GatewayUpdateTodoItemDto,
-  //   @CurrentUser() user: IAuthenticatedUser
-  // ) {
-  //   const {description, priority, title, todoList} = updateTodoItemDto;
-  //   return await this.inventoryService.update({
-  //     description, 
-  //     priority, 
-  //     title, 
-  //     todoList,
-  //     id,
-  //     user: user._id
-  //   });
-  // }
+  @Patch(':id')
+  async update(
+    @Param('id') id: string, 
+    @Body() updateProductDto: UpdateProductDto,
+    @CurrentUser() user: IAuthenticatedUser
+  ) {
+    return await this.inventoryService.update(id, updateProductDto, user._id);
+  }
 
-  // @Delete(':id')
-  // async remove(
-  //   @Param('id') id: string,
-  //   @CurrentUser() user: IAuthenticatedUser
+  @Delete(':id')
+  async remove(
+    @Param('id') id: string,
+    @CurrentUser() user: IAuthenticatedUser
   
-  // ) {
-  //   return await this.inventoryService.remove({
-  //     id,
-  //     user: user._id
-  //   });
-  // }
+  ) {
+    return await this.inventoryService.remove(id, user._id);
+  }
 }

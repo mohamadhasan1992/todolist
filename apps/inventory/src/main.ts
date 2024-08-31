@@ -2,7 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { join } from 'path';
 import { InventoryModule } from './inventory.module';
-import { QUERY_PACKAGE_NAME } from '@app/common/types';
+import { INVENTORY_PACKAGE_NAME } from '@app/common';
 
 
 
@@ -14,9 +14,8 @@ async function bootstrap() {
       transport: Transport.GRPC,
       options:{
         url: "inventory:50052",
-        // protoPath: join(__dirname, '../../../proto/query.proto'),
-        protoPath: join(__dirname, '../query.proto'),
-        package: QUERY_PACKAGE_NAME
+        protoPath: join(__dirname, '../inventory.proto'),
+        package: INVENTORY_PACKAGE_NAME
       } 
 
     }

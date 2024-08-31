@@ -57,7 +57,11 @@
       "entryFile": "main",
       "sourceRoot": "apps/inventory/src",
       "compilerOptions": {
-        "tsConfigPath": "apps/inventory/tsconfig.app.json"
+        "tsConfigPath": "apps/inventory/tsconfig.app.json",
+        "assets": [
+          "proto/*.proto"
+        ],
+        "watchAssets": true
       }
     },
     "order": {
@@ -66,7 +70,11 @@
       "entryFile": "main",
       "sourceRoot": "apps/order/src",
       "compilerOptions": {
-        "tsConfigPath": "apps/order/tsconfig.app.json"
+        "tsConfigPath": "apps/order/tsconfig.app.json",
+        "assets": [
+          "proto/*.proto"
+        ],
+        "watchAssets": true
       }
     },
     "payment": {
@@ -75,7 +83,11 @@
       "entryFile": "main",
       "sourceRoot": "apps/payment/src",
       "compilerOptions": {
-        "tsConfigPath": "apps/payment/tsconfig.app.json"
+        "tsConfigPath": "apps/payment/tsconfig.app.json",
+        "assets": [
+          "proto/*.proto"
+        ],
+        "watchAssets": true
       }
     }
   },
