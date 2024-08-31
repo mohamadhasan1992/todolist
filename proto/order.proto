@@ -1,0 +1,41 @@
+syntax = "proto3";
+
+package order;
+
+
+// Order
+message OrderItem {
+    string id = 1;
+    string title = 2;
+    string description = 3;
+    int32 quantity = 4; 
+    string createdAt = 5;
+}
+
+message OrderListRequest {
+    string title_filter = 1; // Example filter
+    string date_range_start = 2;
+    string date_range_end = 3;
+    int32 page = 4;
+    int32 limit = 5;
+    string sort = 6;
+    string min_quantity = 7;
+    string max_quantity = 8;
+}
+
+message OrderLists {
+    repeated OrderItem orderItems = 1;
+}
+
+
+message FindOneOrderByIdQuery{
+    string id = 1;
+}
+
+
+
+service OrderService {
+    rpc FindOrderList(OrderListRequest) returns (OrderLists) {}
+    rpc FindOneOrder(FindOneOrderByIdQuery) returns (OrderItem) {}
+}
+

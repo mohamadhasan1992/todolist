@@ -2,7 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { AuthenticationModule } from './authentication.module';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { join } from 'path';
-import { QUERY_PACKAGE_NAME } from '@app/common/types';
+import { AUTH_PACKAGE_NAME } from '@app/common';
 
 
 async function bootstrap() {
@@ -12,8 +12,8 @@ async function bootstrap() {
       transport: Transport.GRPC,
       options:{
         url: "authentication:50051",
-        protoPath: join(__dirname, '../query.proto'),
-        package: QUERY_PACKAGE_NAME
+        protoPath: join(__dirname, '../auth.proto'),
+        package: AUTH_PACKAGE_NAME
       } 
 
     }

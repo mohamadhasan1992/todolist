@@ -1,0 +1,36 @@
+syntax = "proto3";
+
+package inventory;
+
+// Inventory
+message ProductItem {
+    string id = 1;
+    string label = 2;
+    int32 price = 3;
+    int32 quantity = 4;
+}
+
+message ProductListRequest {
+    string label_filter = 1; 
+    int32 min_price = 2;
+    int32 max_price = 3;
+    int32 min_quantity = 4;
+    int32 max_quantity = 5;
+    int32 page = 6;
+    int32 limit = 7;
+    string sort = 8;
+}
+
+message ProductList {
+    repeated ProductItem productItems = 1;
+}
+
+
+message FindOneProductByIdQuery{
+    string id = 1;
+}
+
+service InventoryService {
+    rpc FindProductList(ProductListRequest) returns (ProductList) {}
+    rpc FindOneProduct(FindOneProductByIdQuery) returns (ProductItem) {}
+}

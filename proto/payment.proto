@@ -1,0 +1,39 @@
+syntax = "proto3";
+
+package payment;
+
+
+// Payment
+message PaymentItem {
+    string id = 1;
+    string user = 2;
+    string createdAt = 3;
+}
+
+message PaymentListRequest {
+    string user = 1;
+    string createAt_from = 2;
+    string createAt_to = 3;
+    int32 page = 4;
+    int32 limit = 5;
+    string sort = 6;
+    string min_quantity = 7;
+    string max_quantity = 8;
+}
+
+message PaymentLists {
+    repeated PaymentItem PaymentItems = 1;
+}
+
+
+message FindOnePaymentByIdQuery{
+    string id = 1;
+}
+
+
+
+service PaymentService {
+    rpc FindPaymentList(PaymentListRequest) returns (PaymentLists) {}
+    rpc FindOnePayment(FindOnePaymentByIdQuery) returns (PaymentItem) {}
+}
+

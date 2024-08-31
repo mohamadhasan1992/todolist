@@ -5,7 +5,10 @@ export enum Priority {
     HIGH = 2
 }
 
-
+export enum AuthActionsEnum{
+    Signup,
+    Login
+}
 
 
 

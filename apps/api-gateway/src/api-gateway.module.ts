@@ -13,7 +13,7 @@ import { UserJwtStrategy } from './infrustructure/auth/strategies/jwt.strategy';
 import { RpcExceptionFilter } from './domain/exceptions/rpc-exception.filter';
 import { HealthController } from './presentation/controllers/health.controller';
 import * as Joi from 'joi';
-import { AUTH_SERVICE_NAME, INVENTORY_SERVICE_NAME, ORDER_SERVICE_NAME, PAYMENT_SERVICE_NAME, QUERY_PACKAGE_NAME } from '@app/common/types';
+import { AUTH_PACKAGE_NAME, AUTH_SERVICE_NAME, INVENTORY_PACKAGE_NAME, INVENTORY_SERVICE_NAME, ORDER_PACKAGE_NAME, ORDER_SERVICE_NAME, PAYMENT_PACKAGE_NAME, PAYMENT_SERVICE_NAME } from '@app/common/types';
 import { InventoryService } from './application/services/inventory.service';
 import { PaymentService } from './application/services/payment.service';
 import { OrderService } from './application/services/order.service';
@@ -50,8 +50,8 @@ import { ApiGatewayKafkaService } from './infrustructure/messaging/api-gateway-k
         transport: Transport.GRPC,
         options: {
           url:"authentication:50051",
-          package: QUERY_PACKAGE_NAME,
-          protoPath: join(__dirname, '../query.proto'),
+          package: AUTH_PACKAGE_NAME,
+          protoPath: join(__dirname, '../auth.proto'),
         },
       } 
     ]),
@@ -61,8 +61,8 @@ import { ApiGatewayKafkaService } from './infrustructure/messaging/api-gateway-k
         transport: Transport.GRPC,
         options: {
           url:"Inventory:50052",
-          package: QUERY_PACKAGE_NAME,
-          protoPath: join(__dirname, '../query.proto'),
+          package: INVENTORY_PACKAGE_NAME,
+          protoPath: join(__dirname, '../inventory.proto'),
         },
       } 
     ]),
@@ -73,22 +73,22 @@ import { ApiGatewayKafkaService } from './infrustructure/messaging/api-gateway-k
         transport: Transport.GRPC,
         options: {
           url:"Order:50053",
-          package: QUERY_PACKAGE_NAME,
-          protoPath: join(__dirname, '../query.proto'),
+          package: ORDER_PACKAGE_NAME,
+          protoPath: join(__dirname, '../order.proto'),
         },
       } 
     ]),
-    ClientsModule.register([
-      {
-        name: PAYMENT_SERVICE_NAME,
-        transport: Transport.GRPC,
-        options: {
-          url:"Payment:50054",
-          package: QUERY_PACKAGE_NAME,
-          protoPath: join(__dirname, '../query.proto'),
-        },
-      } 
-    ]),
+    // ClientsModule.register([
+    //   {
+    //     name: PAYMENT_SERVICE_NAME,
+    //     transport: Transport.GRPC,
+    //     options: {
+    //       url:"Payment:50054",
+    //       package: PAYMENT_PACKAGE_NAME,
+    //       protoPath: join(__dirname, '../payment.proto'),
+    //     },
+    //   } 
+    // ]),
     
     
     JwtModule.registerAsync({
@@ -104,14 +104,14 @@ import { ApiGatewayKafkaService } from './infrustructure/messaging/api-gateway-k
   controllers: [
     AuthController,
     InventoryController,
-    PaymentController,
+    // PaymentController,
     OrderController,
     HealthController
   ],
   providers: [
     ApiGatewayKafkaService,
     InventoryService,
-    PaymentService,
+    // PaymentService,
     OrderService,
     AuthService, 
     UserJwtStrategy,

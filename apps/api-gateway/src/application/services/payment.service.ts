@@ -23,7 +23,7 @@ export class PaymentService implements OnModuleInit {
   async findAll(
     filterQuery: PaymentListRequest
   ) {
-    return await handleError(this.paymentService.findPayment(filterQuery));
+    return await handleError(this.paymentService.findPaymentList(filterQuery));
   }
 
   async findOne(

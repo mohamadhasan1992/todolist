@@ -3,8 +3,8 @@ import { IAuthenticatedUser } from '@app/common';
 import { AuthService } from '../../application/services/auth.service';
 import { JwtAuthGuard } from '../../infrustructure/auth/guards/jwt-auth.guard';
 import { CurrentUser } from '../../infrustructure/auth/decorators/current-user.decorator';
-import { LoginUserDto } from '@app/common/types';
 import { SignUpUserDto } from '../dto/signup-user.dto';
+import { LoginUserDto } from 'apps/authentication/src/application/dto/login-user.dto';
 
 
 

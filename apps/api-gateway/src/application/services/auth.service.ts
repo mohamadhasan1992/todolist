@@ -1,12 +1,15 @@
 import { 
   IAuthenticatedUser, 
+  AuthActionsEnum, 
   handleError
 } from '@app/common';
-import { AUTH_SERVICE_NAME, AuthServiceClient, GetMeDto, LoginUserDto, SignupUserDto } from '@app/common/types';
+import { AUTH_SERVICE_NAME, AuthServiceClient, GetMeDto } from '@app/common/types';
 import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
 import { ClientGrpc } from '@nestjs/microservices';
 import {  Observable } from 'rxjs';
 import { ApiGatewayKafkaService } from '../../infrustructure/messaging/api-gateway-kafka.service';
+import { SignUpUserDto } from '../../presentation/dto/signup-user.dto';
+import { LoginUserDto } from 'apps/authentication/src/application/dto/login-user.dto';
 
 
 
@@ -25,17 +28,29 @@ export class AuthService implements OnModuleInit {
     }
 
 
-    async sinupUser(signUpUserDto: SignupUserDto){
-      console.log("signUpUserDto",signUpUserDto)
-      const response = await this.kafkaService.sendRequestToAuthService(
-        signUpUserDto
-      );      
-      console.log(response)
-      return response
+    async sinupUser(signUpUserDto: SignUpUserDto){
+      const {success, data, message} = await this.kafkaService.sendRequestToAuthService(
+        {
+          ...signUpUserDto,
+          action: AuthActionsEnum.Signup
+        }
+      );
+      return {
+        success, data, message
+      }
     } 
 
     async loginUser(loginUserDto: LoginUserDto){
-      return await handleError(this.authService.loginUser(loginUserDto))
+      const {success, data, message} = await this.kafkaService.sendRequestToAuthService(
+        {
+          ...loginUserDto,
+          action: AuthActionsEnum.Login
+        }
+      );
+
+      return {
+        success, data, message      
+      }
     }
 
 

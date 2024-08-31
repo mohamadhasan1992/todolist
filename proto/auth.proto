@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+package auth;
+
+
+message FindUserByEmailDto{
+    string email = 1;
+}
+
+message User {
+    string _id = 1;
+    string name = 2;
+    string email = 3;
+}
+
+message GetMeDto {
+    string userId = 1;
+}
+
+
+service AuthService {
+    rpc GetMe(GetMeDto) returns (User) {}
+}

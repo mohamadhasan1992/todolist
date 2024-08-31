@@ -1,7 +1,6 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { LoginCommand } from './login.command';
 import { AuthService } from '../../services/auth.service';
-import { LoginUserResponse } from '@app/common';
 
 
 
@@ -12,7 +11,7 @@ export class loginUserHandler implements ICommandHandler<LoginCommand> {
     private readonly authService: AuthService,
   ) {}
 
-  async execute({loginUserDto}: LoginCommand): Promise<LoginUserResponse> {
+  async execute({loginUserDto}: LoginCommand) {
     const {
       email,
       password

@@ -1,4 +1,4 @@
-import { LoginUserDto } from "@app/common";
+import { LoginUserDto } from "../../dto/login-user.dto";
 
 
 export class LoginCommand {

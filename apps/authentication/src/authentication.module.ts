@@ -17,8 +17,7 @@ import * as Joi from 'joi';
 import { UserQueryEntityRepository } from './infrustructure/repositories/user-query-entity.repository';
 import { UserCommandEntityRepository } from './infrustructure/repositories/user-command-entity.repository';
 import { KafkaModule } from '@app/common/messaging/kfaka-streaming.module';
-import { KafkaService } from '@app/common/messaging/kafka-streaming.service';
-import { KafkaTopics } from '@app/common';
+import { AuthKafkaService } from './application/services/auth-kafka.service';
 
 
 
@@ -87,32 +86,10 @@ import { KafkaTopics } from '@app/common';
     {provide: "UserCommandRepository", useClass: UserCommandEntityRepository},
     UserEntityFactory,
     UserSchemaFactory,
+    AuthKafkaService,
     ...AuthCommandHandlers,
     ...AuthQueryHandlers
 
   ]
 })
-export class AuthenticationModule {
-
-  constructor(private readonly kafkaService: KafkaService, private readonly authService: AuthService) {}
-
-  async onModuleInit() {
-    await this.kafkaService.createConsumer('auth-group', KafkaTopics.KafkaAuthenticationRequestTopic, async (payload) => {
-      const { value } = payload.message;
-      const data = JSON.parse(value.toString());
-      const {
-        name,
-        email,
-        password
-      } = data;
-      const result = await this.authService.signup(
-        name,
-        email,
-        password
-      );
-
-      // Send the response back
-      await this.kafkaService.sendMessage('auth-responses', [result]);
-    });
-  }
-}
+export class AuthenticationModule {}

@@ -14,6 +14,11 @@ export class getMeQueryHandler implements IQueryHandler<GetMeQuery> {
   ) {}
 
   async execute({userId}: GetMeQuery) {
-    return this.userQueryRepository.findById(userId);
+    const user = await this.userQueryRepository.findById(userId);
+    return {
+      _id: user.getId(),
+      name: user.getName(),
+      email: user.getEmail()
+    }
   }
 }
