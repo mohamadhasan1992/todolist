@@ -3,7 +3,7 @@ import { AggregateRoot } from "@nestjs/cqrs";
 
 export class Payment extends AggregateRoot{
     constructor(
-      private readonly _id: string,
+      private id: string,
       private user: string,
       private quantity: number,
       private createdAt: Date
@@ -11,8 +11,8 @@ export class Payment extends AggregateRoot{
       super()
     }
 
-    getId(){
-      return this._id
+    getId(): string{
+      return this.id
     }
 
     getQuantity(): number{

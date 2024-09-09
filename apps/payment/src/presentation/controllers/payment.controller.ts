@@ -1,7 +1,7 @@
 import { Controller, Query } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { Payload } from '@nestjs/microservices';
-import { FindOneQuery, PaymentItem, PaymentList, PaymentListRequest, PaymentServiceController, PaymentServiceControllerMethods, ProductItem, ProductList, ProductListRequest } from '@app/common';
+import { FindOnePaymentByIdQuery, PaymentItem, PaymentListRequest, PaymentLists, PaymentServiceController, PaymentServiceControllerMethods, ProductItem, ProductList, ProductListRequest } from '@app/common';
 import { GetPaymentListsQuery } from '../../application/queries/get-paymentList-query';
 import { GetOnePaymentQuery } from '../../application/queries/get-payment-query';
 
@@ -17,19 +17,19 @@ export class PaymentController implements PaymentServiceController {
     private readonly queryBus: QueryBus,
   ) {}
 
-  async findPayment(
+  async findPaymentList(
     @Query() filterQuery: PaymentListRequest
-  ): Promise<PaymentList>{
+  ): Promise<PaymentLists>{
     const paymentLists = await this.queryBus.execute(
       new GetPaymentListsQuery(filterQuery)
     )
     return {
-      paymentItems: paymentLists 
+      PaymentItems: paymentLists 
     }
   }
 
   async findOnePayment(
-    @Payload() findOnePaymentDto: FindOneQuery
+    @Payload() findOnePaymentDto: FindOnePaymentByIdQuery
   ): Promise<PaymentItem>{
     const { id } = findOnePaymentDto;
     const paymentItem = await this.queryBus.execute(

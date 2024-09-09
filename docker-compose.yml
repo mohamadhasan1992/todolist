@@ -17,7 +17,7 @@ services:
       - app-network
     volumes:
       - .:/usr/src/app
-      - ./proto/:/usr/src/app/proto
+      - ./proto/:/usr/src/app/dist/proto
       - node_modules:/usr/src/app/node_modules
     depends_on:
       - kafka
@@ -38,7 +38,7 @@ services:
       - app-network
     volumes:
       - .:/usr/src/app
-      - ./proto/:/usr/src/app/proto
+      - ./proto/:/usr/src/app/dist/proto
       - node_modules:/usr/src/app/node_modules
     depends_on:
       - kafka
@@ -57,10 +57,13 @@ services:
       - app-network
     volumes:
       - .:/usr/src/app
-      - ./proto/:/usr/src/app/proto
+      - ./proto/:/usr/src/app/dist/proto
       - node_modules:/usr/src/app/node_modules
     depends_on:
       - kafka
+      - postgres-master
+      - postgres-replica1
+      - postgres-replica2
   order:
     container_name: order
     build:
@@ -76,7 +79,7 @@ services:
       - app-network
     volumes:
       - .:/usr/src/app
-      - ./proto/:/usr/src/app/proto
+      - ./proto/:/usr/src/app/dist/proto
       - node_modules:/usr/src/app/node_modules
     depends_on:
       - kafka
@@ -95,26 +98,82 @@ services:
       - app-network
     volumes:
       - .:/usr/src/app
-      - ./proto/:/usr/src/app/proto
+      - ./proto/:/usr/src/app/dist/proto
       - node_modules:/usr/src/app/node_modules
     depends_on:
       - kafka
 
 
   
-  # postgres:
-  #   container_name: postgres
-  #   image: postgres:12.7
-  #   ports:
-  #     - "5432:5432"
-  #   networks:
-  #     - postgres-net
-  #   environment:
-  #     POSTGRES_DB: todos
-  #     POSTGRES_USER: mohamad
-  #     POSTGRES_PASSWORD: hasan
-  #   volumes:
-  #     - "postgres_data:/var/lib/postgresql/data"
+  postgres-master:
+    image: postgres:12.7
+    container_name: postgres-master
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: master_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-master-data:/var/lib/postgresql/data
+    command: postgres -c wal_level=replica -c max_wal_senders=3 -c max_replication_slots=3
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      retries: 5
+      start_period: 30s
+      timeout: 5s
+    networks:
+      - app-network
+
+  postgres-replica1:
+    image: postgres:12.7
+    container_name: postgres-replica1
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres-replica1-data:/var/lib/postgresql/data
+    depends_on:
+      - postgres-master
+    command: |
+      bash -c "until pg_basebackup -h postgres-master -D /var/lib/postgresql/data -U postgres -vP -R -W; do sleep 1; done && postgres"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      retries: 5
+      start_period: 30s
+      timeout: 5s
+    networks:
+      - app-network
+
+  postgres-replica2:
+    image: postgres:12.7
+    container_name: postgres-replica2
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5434:5432"
+    volumes:
+      - postgres-replica2-data:/var/lib/postgresql/data
+    depends_on:
+      - postgres-master
+    command: |
+      bash -c "until pg_basebackup -h postgres-master -D /var/lib/postgresql/data -U postgres -vP -R -W; do sleep 1; done && postgres"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      retries: 5
+      start_period: 30s
+      timeout: 5s
+    networks:
+      - app-network
+
+
+
   zookeeper:
     image: wurstmeister/zookeeper:3.4.6
     ports:
@@ -186,10 +245,12 @@ networks:
     driver: bridge
 
 volumes: 
-  # postgres_data:
   node_modules:
   primary_data:
   secondary_data:
+  postgres-master-data:
+  postgres-replica1-data:
+  postgres-replica2-data:
 
 # rs.initiate({
 #   _id: "dbrs",

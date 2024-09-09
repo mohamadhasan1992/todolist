@@ -1,7 +1,7 @@
 import { CommandHandler, EventPublisher, ICommandHandler } from '@nestjs/cqrs';
-import { Inject } from '@nestjs/common';
 import { UpdatePaymentCommand } from './update-payment.command';
-import { IPaymentCommandRepository, IPaymentQueryRepository } from 'apps/payment/src/domain/repositories/payment.repository.interface';
+import { InjectModel } from '@nestjs/mongoose';
+import { IPaymentRepository } from 'apps/payment/src/domain/repositories/payment.repository.interface';
 
 
 
@@ -11,10 +11,8 @@ import { IPaymentCommandRepository, IPaymentQueryRepository } from 'apps/payment
 @CommandHandler(UpdatePaymentCommand)
 export class UpdatePaymentHandler implements ICommandHandler<UpdatePaymentCommand> {
   constructor(
-    @Inject("PaymentCommandRepository")
-    private readonly paymentRepository: IPaymentCommandRepository,
-    @Inject("PaymentQueryRepository")
-    private readonly paymentQueryRepository: IPaymentQueryRepository,
+    @InjectModel("PaymentRepository")
+    private readonly paymentRepository: IPaymentRepository,
     private readonly eventPublisher: EventPublisher
   ) {}
 
@@ -22,10 +20,10 @@ export class UpdatePaymentHandler implements ICommandHandler<UpdatePaymentComman
     const {quantity, user} = updatePaymentDto;
 
     const Payment = this.eventPublisher.mergeObjectContext(
-      await this.paymentQueryRepository.findOneById(id)
+      await this.paymentRepository.findOne({id} as any)
     );
     Payment.updatePayment(quantity, user);
-    await this.paymentRepository.findOneAndReplaceById(id, Payment)
+    await this.paymentRepository.update(id, Payment)
     Payment.commit()
     // find todoItems
     return {

@@ -1,20 +1,13 @@
-import { IdentifiableEntitySchema } from '@app/common/database/identifiable-entity.schema';
-import { Prop, Schema } from '@nestjs/mongoose';
+import { PostgresAbstractDocument } from '@app/common/postgresdatabase/postgres-abstract.entity';
+import { Column, Entity } from 'typeorm';
 
 
 
-
-@Schema({versionKey: false, timestamps: true, collection: "Payment"})
-export class PaymentSchema extends IdentifiableEntitySchema {
-  @Prop({required: true})
+@Entity()
+export class PaymentEntity extends PostgresAbstractDocument {
+  @Column()
   user: string;
 
-  @Prop({required: true})
+  @Column()
   quantity: number;
-
-  @Prop({type: Date})
-  createdAt: Date;
-
 }
-
-

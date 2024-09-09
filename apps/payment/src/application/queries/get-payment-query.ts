@@ -1,8 +1,8 @@
-import { FindOneQuery } from "@app/common";
+import { FindOnePaymentByIdQuery } from "@app/common";
 
 
 export class GetOnePaymentQuery {
     constructor(
-        public findPaymentById: FindOneQuery
+        public findPaymentById: FindOnePaymentByIdQuery
     ){}
 }

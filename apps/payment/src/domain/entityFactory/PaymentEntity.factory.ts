@@ -1,10 +1,10 @@
 import { EntityFactory } from "@app/common/database/entity.factory";
-import { Types } from "mongoose";
-import { Inject, Injectable } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 import { Payment } from "../entities/payment.entity";
-import { IPaymentCommandRepository } from "../repositories/payment.repository.interface";
 import { PaymentCreatedEvent } from "../events/payment-created.event";
-
+import { v4 as uuidv4 } from 'uuid';
+import { IPaymentRepository } from "../repositories/payment.repository.interface";
+import { InjectModel } from "@nestjs/mongoose";
 
 
 
@@ -13,13 +13,13 @@ import { PaymentCreatedEvent } from "../events/payment-created.event";
 @Injectable()
 export class PaymentEntityFactory implements EntityFactory<Payment>{
     constructor(
-        @Inject("PaymentCommandRepository") 
-        private readonly paymentRepository: IPaymentCommandRepository
+        @InjectModel("PaymentRepository")
+        private readonly paymentRepository: IPaymentRepository,
     ){}
 
     async create(quantity: number, user: string): Promise<Payment> {
         const payment = new Payment(
-            new Types.ObjectId().toHexString(), 
+            uuidv4, 
             user,
             quantity,
             new Date(Date.now())

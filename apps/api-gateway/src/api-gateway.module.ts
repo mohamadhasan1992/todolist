@@ -52,7 +52,7 @@ import { ApiGatewayInventoryKafkaService } from './infrustructure/messaging/gate
         options: {
           url:"authentication:50051",
           package: AUTH_PACKAGE_NAME,
-          protoPath: join(__dirname, '../auth.proto'),
+          protoPath: join(__dirname, '../../../proto/auth.proto'),
         },
       } 
     ]),
@@ -63,7 +63,7 @@ import { ApiGatewayInventoryKafkaService } from './infrustructure/messaging/gate
         options: {
           url:"Inventory:50052",
           package: INVENTORY_PACKAGE_NAME,
-          protoPath: join(__dirname, '../inventory.proto'),
+          protoPath: join(__dirname, '../../../proto/inventory.proto'),
         },
       } 
     ]),
@@ -75,7 +75,7 @@ import { ApiGatewayInventoryKafkaService } from './infrustructure/messaging/gate
         options: {
           url:"Order:50053",
           package: ORDER_PACKAGE_NAME,
-          protoPath: join(__dirname, '../order.proto'),
+          protoPath: join(__dirname, '../../../proto/order.proto'),
         },
       } 
     ]),
@@ -86,7 +86,7 @@ import { ApiGatewayInventoryKafkaService } from './infrustructure/messaging/gate
         options: {
           url:"Payment:50054",
           package: PAYMENT_PACKAGE_NAME,
-          protoPath: join(__dirname, '../payment.proto'),
+          protoPath: join(__dirname, '../../../proto/payment.proto'),
         },
       } 
     ]),

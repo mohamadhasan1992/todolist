@@ -14,7 +14,7 @@ async function bootstrap() {
       transport: Transport.GRPC,
       options:{
         url: "inventory:50052",
-        protoPath: join(__dirname, '../inventory.proto'),
+        protoPath: join(__dirname, '../../proto/inventory.proto'),
         package: INVENTORY_PACKAGE_NAME
       } 
 

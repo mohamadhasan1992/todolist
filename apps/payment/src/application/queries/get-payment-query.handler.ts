@@ -1,7 +1,7 @@
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
-import { Inject } from '@nestjs/common';
 import { GetOnePaymentQuery } from './get-payment-query';
-import { IPaymentQueryRepository } from '../../domain/repositories/payment.repository.interface';
+import { InjectModel } from '@nestjs/mongoose';
+import { IPaymentRepository } from '../../domain/repositories/payment.repository.interface';
 
 
 
@@ -11,12 +11,12 @@ import { IPaymentQueryRepository } from '../../domain/repositories/payment.repos
 @QueryHandler(GetOnePaymentQuery)
 export class GetOnePaymentHandler implements IQueryHandler<GetOnePaymentQuery> {
   constructor(
-    @Inject("PaymentQueryRepository")
-    private readonly paymentRepository: IPaymentQueryRepository
+    @InjectModel("PaymentRepository")
+    private readonly paymentRepository: IPaymentRepository,
   ) {}
 
   async execute({findPaymentById}: GetOnePaymentQuery) {
     const {id} = findPaymentById;
-    return this.paymentRepository.findOneById(id);
+    return this.paymentRepository.findOne({id} as any);
   }
 }
