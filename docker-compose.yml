@@ -61,9 +61,9 @@ services:
       - node_modules:/usr/src/app/node_modules
     depends_on:
       - kafka
-      - postgres-master
-      - postgres-replica1
-      - postgres-replica2
+      - pg-master
+      - pg-replica1
+      - pg-replica2
   order:
     container_name: order
     build:
@@ -105,9 +105,9 @@ services:
 
 
   
-  postgres-master:
-    image: postgres:12.7
-    container_name: postgres-master
+  pg-master:
+    image: postgres:latest
+    container_name: pg-master
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: password
@@ -115,8 +115,10 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - postgres-master-data:/var/lib/postgresql/data
-    command: postgres -c wal_level=replica -c max_wal_senders=3 -c max_replication_slots=3
+      - master-data:/var/lib/postgresql/data
+      - ./config/pg_hba.conf:/var/lib/postgresql/config/pg_hba.conf
+      - ./config/postgresql.conf:/var/lib/postgresql/config/postgresql.conf
+    command: postgres -c 'config_file=/var/lib/postgresql/config/postgresql.conf'
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 10s
@@ -126,20 +128,22 @@ services:
     networks:
       - app-network
 
-  postgres-replica1:
-    image: postgres:12.7
-    container_name: postgres-replica1
+  pg-replica1:
+    image: postgres:latest
+    container_name: pg-replica1
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: password
     ports:
       - "5433:5432"
     volumes:
-      - postgres-replica1-data:/var/lib/postgresql/data
+      - replica1-data:/var/lib/postgresql/data
+      - ./config/pg_hba.conf:/var/lib/postgresql/config/pg_hba.conf 
     depends_on:
-      - postgres-master
+      - pg-master
     command: |
-      bash -c "until pg_basebackup -h postgres-master -D /var/lib/postgresql/data -U postgres -vP -R -W; do sleep 1; done && postgres"
+      bash -c "until PGPASSWORD='replicator_password' pg_basebackup -h pg-master -D /var/lib/postgresql/data -U replicator -vP -R; do sleep 1; done && postgres" 
+
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 10s
@@ -149,20 +153,21 @@ services:
     networks:
       - app-network
 
-  postgres-replica2:
-    image: postgres:12.7
-    container_name: postgres-replica2
+  pg-replica2:
+    image: postgres:latest
+    container_name: pg-replica2
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: password
     ports:
       - "5434:5432"
     volumes:
-      - postgres-replica2-data:/var/lib/postgresql/data
+      - replica2-data:/var/lib/postgresql/data
+      - ./config/pg_hba.conf:/var/lib/postgresql/config/pg_hba.conf 
     depends_on:
-      - postgres-master
+      - pg-master
     command: |
-      bash -c "until pg_basebackup -h postgres-master -D /var/lib/postgresql/data -U postgres -vP -R -W; do sleep 1; done && postgres"
+      bash -c "until PGPASSWORD='replicator_password' pg_basebackup -h pg-master -D /var/lib/postgresql/config -U replicator -vP -R; do sleep 1; done && postgres"
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 10s
@@ -243,14 +248,18 @@ services:
 networks:
   app-network:
     driver: bridge
+    ipam:
+      config:
+        - subnet: "172.26.0.0/16"
 
 volumes: 
   node_modules:
   primary_data:
   secondary_data:
-  postgres-master-data:
-  postgres-replica1-data:
-  postgres-replica2-data:
+  master-data:
+    driver: local
+  replica1-data:
+  replica2-data:
 
 # rs.initiate({
 #   _id: "dbrs",

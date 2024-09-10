@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import * as Joi from 'joi';
 import { PaymentController } from './presentation/controllers/payment.controller';
 import { PaymentEntityFactory } from './domain/entityFactory/PaymentEntity.factory';
@@ -12,8 +12,6 @@ import { PaymentEntity } from './infrastructure/database/schemas/payment.schema'
 import { PaymentEntityRepository } from './infrastructure/repositories/payment-entity.repository';
 import { PostgresDatabaseModule } from '@app/common/postgresdatabase/postgres-database.module';
 import { PaymentSchemaFactory } from './infrastructure/database/schema-factory/payment-schema.factory';
-
-
 
 
 
@@ -41,7 +39,37 @@ import { PaymentSchemaFactory } from './infrastructure/database/schema-factory/p
       })
     }),
     CqrsModule,
-    PostgresDatabaseModule,
+    PostgresDatabaseModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => ({
+        master: {
+          host: configService.get<string>('DB_MASTER_HOST'),
+          port: configService.get<number>('DB_MASTER_PORT'),
+          username: configService.get<string>('DB_MASTER_USER'),
+          password: configService.get<string>('DB_MASTER_PASSWORD'),
+          database: configService.get<string>('DB_MASTER_NAME'),
+        },
+        slaves: [
+          {
+            name: configService.get<string>('DB_SLAVE1_NAME'),
+            host: configService.get<string>('DB_SLAVE1_HOST'),
+            port: configService.get<number>('DB_SLAVE1_PORT'),
+            username: configService.get<string>('DB_SLAVE1_USER'),
+            password: configService.get<string>('DB_SLAVE1_PASSWORD'),
+            database: configService.get<string>('DB_SLAVE1_NAME'),
+          },
+          {
+            name: configService.get<string>('DB_SLAVE2_NAME'),
+            host: configService.get<string>('DB_SLAVE2_HOST'),
+            port: configService.get<number>('DB_SLAVE2_PORT'),
+            username: configService.get<string>('DB_SLAVE2_USER'),
+            password: configService.get<string>('DB_SLAVE2_PASSWORD'),
+            database: configService.get<string>('DB_SLAVE2_NAME'),
+          },
+        ],
+      }),
+    }),
     PostgresDatabaseModule.forFeature([PaymentEntity])
   ],
   controllers: [

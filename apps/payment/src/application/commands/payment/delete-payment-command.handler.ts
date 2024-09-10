@@ -2,8 +2,8 @@ import { CommandHandler, EventPublisher, ICommandHandler } from '@nestjs/cqrs';
 import { RpcException } from '@nestjs/microservices';
 import { DeletePaymentCommand } from './delete-payment.command';
 import { PaymentDeletedEvent } from 'apps/payment/src/domain/events/payment-deleted.event';
-import { InjectModel } from '@nestjs/mongoose';
 import { IPaymentRepository } from 'apps/payment/src/domain/repositories/payment.repository.interface';
+import { Inject } from '@nestjs/common';
 
 
 
@@ -11,7 +11,7 @@ import { IPaymentRepository } from 'apps/payment/src/domain/repositories/payment
 @CommandHandler(DeletePaymentCommand)
 export class DeletePaymentHandler implements ICommandHandler<DeletePaymentCommand> {
   constructor(
-    @InjectModel("PaymentRepository")
+    @Inject("PaymentRepository")
     private readonly paymentRepository: IPaymentRepository,
     private readonly eventPublisher: EventPublisher
   ) {}

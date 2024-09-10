@@ -1,9 +1,9 @@
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 import { GetPaymentListsQuery } from './get-paymentList-query';
-import { InjectModel } from '@nestjs/mongoose';
 import { IPaymentRepository } from '../../domain/repositories/payment.repository.interface';
 import { Between, FindOptionsWhere } from 'typeorm';
 import { Payment } from '../../domain/entities/payment.entity';
+import { Inject } from '@nestjs/common';
 
 
 
@@ -13,7 +13,7 @@ import { Payment } from '../../domain/entities/payment.entity';
 @QueryHandler(GetPaymentListsQuery)
 export class GetPaymentListHandler implements IQueryHandler<GetPaymentListsQuery> {
   constructor(
-    @InjectModel("PaymentRepository")
+    @Inject("PaymentRepository")
     private readonly paymentRepository: IPaymentRepository,
   ) {}
 

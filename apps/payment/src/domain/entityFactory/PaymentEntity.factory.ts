@@ -1,10 +1,9 @@
 import { EntityFactory } from "@app/common/database/entity.factory";
-import { Injectable } from "@nestjs/common";
+import { Inject, Injectable } from "@nestjs/common";
 import { Payment } from "../entities/payment.entity";
 import { PaymentCreatedEvent } from "../events/payment-created.event";
 import { v4 as uuidv4 } from 'uuid';
 import { IPaymentRepository } from "../repositories/payment.repository.interface";
-import { InjectModel } from "@nestjs/mongoose";
 
 
 
@@ -13,7 +12,7 @@ import { InjectModel } from "@nestjs/mongoose";
 @Injectable()
 export class PaymentEntityFactory implements EntityFactory<Payment>{
     constructor(
-        @InjectModel("PaymentRepository")
+        @Inject("PaymentRepository")
         private readonly paymentRepository: IPaymentRepository,
     ){}
 

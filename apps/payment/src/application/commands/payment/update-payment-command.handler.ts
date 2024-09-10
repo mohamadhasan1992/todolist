@@ -1,7 +1,7 @@
 import { CommandHandler, EventPublisher, ICommandHandler } from '@nestjs/cqrs';
 import { UpdatePaymentCommand } from './update-payment.command';
-import { InjectModel } from '@nestjs/mongoose';
 import { IPaymentRepository } from 'apps/payment/src/domain/repositories/payment.repository.interface';
+import { Inject } from '@nestjs/common';
 
 
 
@@ -11,7 +11,7 @@ import { IPaymentRepository } from 'apps/payment/src/domain/repositories/payment
 @CommandHandler(UpdatePaymentCommand)
 export class UpdatePaymentHandler implements ICommandHandler<UpdatePaymentCommand> {
   constructor(
-    @InjectModel("PaymentRepository")
+    @Inject("PaymentRepository")
     private readonly paymentRepository: IPaymentRepository,
     private readonly eventPublisher: EventPublisher
   ) {}
